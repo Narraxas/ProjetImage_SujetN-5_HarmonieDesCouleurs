@@ -90,7 +90,7 @@ void HSL_to_RGB(OCTET *ImgOutRGB,vector<double> ImgInHSL, int nH, int nW){
     }
 }
 
-
+/*
 int main(int argc, char* argv[])
 {
   char cNomImgLue[250], cNomImgEcrite[250], cNomImgEcrite2[250];
@@ -133,3 +133,4 @@ int main(int argc, char* argv[])
    free(ImgIn);
    return 1;
 }
+*/
