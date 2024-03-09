@@ -90,7 +90,7 @@ void monoChromatique(OCTET *ImgOutRGB,vector<double> ImgInHSL, int nH, int nW,do
     double R,G,B;
     for (int i=0;i<nH*nW*3;i+=3){
         double H=color;
-        double S=ImgInHSL[i+1];
+        double S=0.5;
         double L=ImgInHSL[i+2];
         double X,C;
         C=(1-fabs(2*L-1))*S;
@@ -117,15 +117,15 @@ int main(int argc, char* argv[])
 {
   char cNomImgLue[250], cNomImgEcrite[250], cNomImgEcrite2[250];
   int nH, nW, nTaille;
-  
+  double color;
   if (argc != 4) 
      {
-       printf("Usage: ImageIn.ppm ImageOutHSL.ppm ImageOutRGB.ppm \n"); 
+       printf("Usage: ImageIn.ppm couleur(entre 0. et 1) ImageOutRGB.ppm \n"); 
        exit (1) ;
      }
    
    sscanf (argv[1],"%s",cNomImgLue) ;
-   sscanf (argv[2],"%s",cNomImgEcrite);
+   sscanf (argv[2],"%lf",&color);
    sscanf (argv[3],"%s",cNomImgEcrite2);
 
    OCTET *ImgIn, *ImgOut, *ImgOut2;
@@ -144,13 +144,13 @@ int main(int argc, char* argv[])
     vector<double> ImgHSL;
     ImgHSL.resize(nTaille3);
     RGB_to_HSL(ImgIn, ImgHSL, nH, nW);
-    monoChromatique(ImgOut, ImgHSL, nH, nW,0.75);
+    monoChromatique(ImgOut, ImgHSL, nH, nW, color);
     for(int i=0;i<nTaille3;i++){
         //cout<<ImgHSL[i]*255<<endl;
         ImgOut2[i]=ImgHSL[i]*255;
     }
 
-   ecrire_image_ppm(cNomImgEcrite, ImgOut2,  nH, nW);
+  // ecrire_image_ppm(cNomImgEcrite, ImgOut2,  nH, nW);
    ecrire_image_ppm(cNomImgEcrite2, ImgOut,  nH, nW);
    free(ImgIn);
    return 1;
