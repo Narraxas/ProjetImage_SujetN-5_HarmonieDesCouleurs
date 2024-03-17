@@ -18,4 +18,8 @@ void monoChromatique(OCTET *ImgOutRGB,vector<double> ImgInHSL, int nH, int nW,do
 
 void vector_to_OCTETtab(vector<double> vector,OCTET *octet_tab);
 
+double couleurComplementaire(double H);
+void couleurAnalogue(double H, double &H1, double &H2, int ecart) ;
+
+
 #endif

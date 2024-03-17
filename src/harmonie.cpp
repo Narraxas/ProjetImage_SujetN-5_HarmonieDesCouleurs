@@ -115,5 +115,19 @@ void vector_to_OCTETtab(vector<double> vec,OCTET *octet_tab){
     for(int i=0;i<n;i++){
         octet_tab[i]=vec[i]*255;
     }
-}
+};
+
+double couleurComplementaire(double H){
+    return fmod((H + 0.5), 1.0);//entre 0 et 1
+    //return (int)(H * 360 + 180) % 360; entre 0 et 360
+};
+
+void couleurAnalogue(double H, double &H1, double &H2, int ecart){//ecart en degre entre 0 et <180
+    //entre 0 et 1
+    H1 = fmod((H + ecart/360.0), 1.0);
+    H2 = fmod((H - ecart/360.0 + 1.0), 1.0);
+    //entre 0 et 360
+    //H1 = (int)(H * 360 + ecart) % 360;
+    //H2 = (int)(H * 360 - ecart + 360) % 360;
+};
 
