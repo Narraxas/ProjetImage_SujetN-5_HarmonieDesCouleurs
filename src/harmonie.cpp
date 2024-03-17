@@ -131,3 +131,63 @@ void couleurAnalogue(double H, double &H1, double &H2, int ecart){//ecart en deg
     //H2 = (int)(H * 360 - ecart + 360) % 360;
 };
 
+void Complementaire(OCTET *ImgOutRGB,vector<double> ImgInHSL, int nH, int nW,double teinte, OCTET *segmentation, int* tabK){
+    double complementaire=couleurComplementaire(teinte);
+    int red= tabK[0];int blue= tabK[1];int green= tabK[2];    
+    double R,G,B,m;
+    for (int i=0;i<nH*nW*3;i+=3){
+        double S=ImgInHSL[i+1];
+        double L=ImgInHSL[i+2];
+        if(segmentation[i]==red&&segmentation[i+1]==blue&&segmentation[i+2]==green){
+
+            pixel_HSL_to_RGB(teinte,S,L,R,G,B,m);
+            
+            ImgOutRGB[i]=R+m>1?255:(R+m)*255.0;
+            ImgOutRGB[i+1]=G+m>1?255:(G+m)*255.0;
+            ImgOutRGB[i+2]=B+m>1?255:(B+m)*255.0;
+        }
+        else{
+            pixel_HSL_to_RGB(complementaire,S,L,R,G,B,m);
+            
+            ImgOutRGB[i]=R+m>1?255:(R+m)*255.0;
+            ImgOutRGB[i+1]=G+m>1?255:(G+m)*255.0;
+            ImgOutRGB[i+2]=B+m>1?255:(B+m)*255.0;
+        }
+    }
+}
+
+void Analogue(OCTET *ImgOutRGB,vector<double> ImgInHSL, int nH, int nW,double teinte,int ecart, OCTET *segmentation,int* tabK){
+    double teinte2, teinte3;    
+    couleurAnalogue(teinte,teinte2,teinte3,ecart);
+    int red= tabK[0];int blue= tabK[1];int green= tabK[2];    
+    int red2= tabK[3];int blue2= tabK[4];int green2= tabK[5];    
+    double R,G,B,m;
+    for (int i=0;i<nH*nW*3;i+=3){
+        double S=ImgInHSL[i+1];
+        double L=ImgInHSL[i+2];
+        if(segmentation[i]==red&&segmentation[i+1]==blue&&segmentation[i+2]==green){
+
+            pixel_HSL_to_RGB(teinte,S,L,R,G,B,m);
+            
+            ImgOutRGB[i]=R+m>1?255:(R+m)*255.0;
+            ImgOutRGB[i+1]=G+m>1?255:(G+m)*255.0;
+            ImgOutRGB[i+2]=B+m>1?255:(B+m)*255.0;
+        }
+        else if(segmentation[i]==red2&&segmentation[i+1]==blue2&&segmentation[i+2]==green2){
+
+            pixel_HSL_to_RGB(teinte2,S,L,R,G,B,m);
+            
+            ImgOutRGB[i]=R+m>1?255:(R+m)*255.0;
+            ImgOutRGB[i+1]=G+m>1?255:(G+m)*255.0;
+            ImgOutRGB[i+2]=B+m>1?255:(B+m)*255.0;
+        }
+        else{
+            pixel_HSL_to_RGB(teinte3,S,L,R,G,B,m);
+            
+            ImgOutRGB[i]=R+m>1?255:(R+m)*255.0;
+            ImgOutRGB[i+1]=G+m>1?255:(G+m)*255.0;
+            ImgOutRGB[i+2]=B+m>1?255:(B+m)*255.0;
+        }
+    }
+}
+
