@@ -122,10 +122,20 @@ double couleurComplementaire(double H){
     //return (int)(H * 360 + 180) % 360; entre 0 et 360
 };
 
-void couleurAnalogue(double H, double &H1, double &H2, int ecart){//ecart en degre entre 0 et <180
+void couleurTriadique(double H, double &H1, double &H2, int ecart){//ecart en degre entre 0 et <180
     //entre 0 et 1
     H1 = fmod((H + ecart/360.0), 1.0);
     H2 = fmod((H - ecart/360.0 + 1.0), 1.0);
+    //entre 0 et 360
+    //H1 = (int)(H * 360 + ecart) % 360;
+    //H2 = (int)(H * 360 - ecart + 360) % 360;
+};
+
+void couleurQuadratique(double H, double &H1, double &H2, double &H3){
+    //entre 0 et 1
+    H1 = fmod((H + 90/360.0), 1.0);
+    H2 = fmod((H - 90/360.0 + 1.0), 1.0);
+    H3 = fmod((H - 180/360.0 + 1.0), 1.0);
     //entre 0 et 360
     //H1 = (int)(H * 360 + ecart) % 360;
     //H2 = (int)(H * 360 - ecart + 360) % 360;
@@ -156,7 +166,7 @@ void Complementaire(OCTET *ImgOutRGB,vector<double> ImgInHSL, int nH, int nW,dou
     }
 }
 
-void Analogue(OCTET *ImgOutRGB,vector<double> ImgInHSL, int nH, int nW,double teinte,int ecart, OCTET *segmentation,int* tabK){
+void Triadique(OCTET *ImgOutRGB,vector<double> ImgInHSL, int nH, int nW,double teinte,int ecart, OCTET *segmentation,int* tabK){
     double teinte2, teinte3;    
     couleurAnalogue(teinte,teinte2,teinte3,ecart);
     int red= tabK[0];int blue= tabK[1];int green= tabK[2];    
