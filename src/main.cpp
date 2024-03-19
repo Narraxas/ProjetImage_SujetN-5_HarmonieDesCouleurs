@@ -36,8 +36,4 @@ int main(int argc, char* argv[]) {
 
     createPaletteImage(Palette, dominantColors, nTaille3, nW, nH);
     ecrire_image_ppm((char *)"out/Palette.ppm", Palette, nH, nW);
-
-    // for (Color c : dominantColors) {
-    //     std::cout << (int)c.r << std::endl;
-    // }
 }

@@ -129,7 +129,7 @@ vector<Color> get_dominant_colors(const vector<Color>& pixels, int number_of_dom
         ImgOut[z+1] = ImgKmean[z/3].g;
         ImgOut[z+2] = ImgKmean[z/3].b;
     }
-    ecrire_image_ppm((char *)"out/Image_Kmean.ppm", ImgOut, nH, nW);
+    // ecrire_image_ppm((char *)"out/Image_Kmean.ppm", ImgOut, nH, nW);
 
     return dominant_colors;
 }
