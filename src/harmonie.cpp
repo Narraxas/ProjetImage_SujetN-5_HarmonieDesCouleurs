@@ -1,9 +1,5 @@
+
 #include "harmonie.hpp"
-#include <stdio.h>
-#include <vector>
-#include <cmath>
-#include <iostream>
-#include "image_ppm.h"
 
 using namespace std;
 
@@ -95,27 +91,34 @@ void HSL_to_RGB(OCTET *ImgOutRGB,vector<double> ImgInHSL, int nH, int nW){
     }
 };
 
-void monoChromatique(OCTET *ImgOutRGB,vector<double> ImgInHSL, int nH, int nW,double color, double saturation){
+void monoChromatique(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW, double color, double saturation){
     double R,G,B,m;
-    for (int i=0;i<nH*nW*3;i+=3){
-        double H=color;
-        double S=saturation;
-        double L=ImgInHSL[i+2];
+    Color outColor;
 
-        pixel_HSL_to_RGB(H,S,L,R,G,B,m);
+    for (int i=0; i < nH*nW; i++){
+        outColor.h = color;
+        outColor.s = saturation;
+        outColor.l = ImgIn[i].l;
+
+        outColor.HSL_to_RGB();
         
-        ImgOutRGB[i]=R+m>1?255:(R+m)*255.0;
-        ImgOutRGB[i+1]=G+m>1?255:(G+m)*255.0;
-        ImgOutRGB[i+2]=B+m>1?255:(B+m)*255.0;
+        ImgOut[i*3] = outColor.r;
+        ImgOut[i*3+1] = outColor.g;
+        ImgOut[i*3+2] = outColor.b;
     }
 };
 
-void vector_to_OCTETtab(vector<double> vec,OCTET *octet_tab){
+void vector_to_OCTETtab(vector<double> vec, OCTET *octet_tab){
     int n= vec.size();
     for(int i=0;i<n;i++){
         octet_tab[i]=vec[i]*255;
     }
 };
+
+void octetToColorVec(OCTET *octetTab, vector<Color> &colorVec, int nTaille3) {
+    for (int i = 0; i < nTaille3; i+=3)
+        colorVec.push_back(Color(octetTab[i], octetTab[i + 1], octetTab[i + 2]));
+}
 
 double couleurComplementaire(double H){
     return fmod((H + 0.5), 1.0);//entre 0 et 1
@@ -141,34 +144,28 @@ void couleurQuadratique(double H, double &H1, double &H2, double &H3){
     //H2 = (int)(H * 360 - ecart + 360) % 360;
 };
 
-void Complementaire(OCTET *ImgOutRGB,vector<double> ImgInHSL, int nH, int nW,double teinte, OCTET *segmentation, int* tabK){
+void Complementaire(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte){
     double complementaire=couleurComplementaire(teinte);
-    int red= tabK[0];int blue= tabK[1];int green= tabK[2];    
     double R,G,B,m;
-    for (int i=0;i<nH*nW*3;i+=3){
-        double S=ImgInHSL[i+1];
-        double L=ImgInHSL[i+2];
-        if(segmentation[i]==red&&segmentation[i+1]==blue&&segmentation[i+2]==green){
+    Color outColor;
+    OCTET *segmentation;
+    std::vector<Color> tabK = get_dominant_colors(segmentation, ImgIn, 2, nH, nW);
 
-            pixel_HSL_to_RGB(teinte,S,L,R,G,B,m);
-            
-            ImgOutRGB[i]=R+m>1?255:(R+m)*255.0;
-            ImgOutRGB[i+1]=G+m>1?255:(G+m)*255.0;
-            ImgOutRGB[i+2]=B+m>1?255:(B+m)*255.0;
-        }
-        else{
-            pixel_HSL_to_RGB(complementaire,S,L,R,G,B,m);
-            
-            ImgOutRGB[i]=R+m>1?255:(R+m)*255.0;
-            ImgOutRGB[i+1]=G+m>1?255:(G+m)*255.0;
-            ImgOutRGB[i+2]=B+m>1?255:(B+m)*255.0;
-        }
+    for (int i=0; i<nH*nW; i++){
+        outColor.h = (segmentation[i]==tabK[0].r && segmentation[i+1]==tabK[0].g && segmentation[i+2]==tabK[0].b) ? teinte : complementaire;
+        outColor.s=ImgIn[i].s;
+        outColor.l=ImgIn[i].l;
+        outColor.HSL_to_RGB();
+
+        ImgOut[i*3]= outColor.r;
+        ImgOut[i*3+1]= outColor.g;
+        ImgOut[i*3+2]= outColor.b;
     }
 }
 
 void Triadique(OCTET *ImgOutRGB,vector<double> ImgInHSL, int nH, int nW,double teinte,int ecart, OCTET *segmentation,int* tabK){
     double teinte2, teinte3;    
-    couleurAnalogue(teinte,teinte2,teinte3,ecart);
+    couleurTriadique(teinte,teinte2,teinte3,ecart);
     int red= tabK[0];int blue= tabK[1];int green= tabK[2];    
     int red2= tabK[3];int blue2= tabK[4];int green2= tabK[5];    
     double R,G,B,m;
