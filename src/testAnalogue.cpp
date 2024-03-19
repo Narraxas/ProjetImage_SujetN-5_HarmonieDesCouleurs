@@ -12,9 +12,9 @@
 int main(int argc, char* argv[])
 {
   char cNomImgLue[250], cNomImgEcrite[250],cNomImgEcriteMoy[250],cNomImgEcriteConv[250];
-  int nH, nW, nTaille, nbK;
+  int nH, nW, nTaille, nbK, angle;
   double teinte;
-  if (argc != 4) 
+  if (argc != 5) 
      {
        printf("Usage: ImageIn.ppm ImageOut.ppm teinte \n"); 
        exit (1) ;
@@ -23,6 +23,7 @@ int main(int argc, char* argv[])
    sscanf (argv[1],"%s",cNomImgLue) ;
    sscanf (argv[2],"%s",cNomImgEcrite);
    sscanf (argv[3],"%lf",&teinte);
+   sscanf (argv[4],"%d",&angle);
    nbK=3;
 
    OCTET *ImgIn, *ImgOut,*ImgSegm;
@@ -48,7 +49,7 @@ int main(int argc, char* argv[])
     pixel_RGB_to_HSL(tabK[0],tabK[1],tabK[2],H,S,L);
     RGB_to_HSL(ImgIn, ImgHSL, nH, nW);
    
-    Analogue(ImgOut, ImgHSL, nH, nW, teinte,30, ImgSegm,tabK);
+    Analogue(ImgOut, ImgHSL, nH, nW, teinte, angle, ImgSegm,tabK);
    ecrire_image_ppm(cNomImgEcrite, ImgOut,  nH, nW);
    free(ImgIn);
    return 1;
