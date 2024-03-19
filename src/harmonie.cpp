@@ -122,7 +122,7 @@ double couleurComplementaire(double H){
     //return (int)(H * 360 + 180) % 360; entre 0 et 360
 };
 
-void couleurAnalogue(double H, double &H1, double &H2, int ecart){//ecart en degre entre 0 et <180
+void couleurTriadique(double H, double &H1, double &H2, int ecart){//ecart en degre entre 0 et <180
     //entre 0 et 1
     H1 = fmod((H + ecart/360.0), 1.0);
     H2 = fmod((H - ecart/360.0 + 1.0), 1.0);
@@ -130,4 +130,74 @@ void couleurAnalogue(double H, double &H1, double &H2, int ecart){//ecart en deg
     //H1 = (int)(H * 360 + ecart) % 360;
     //H2 = (int)(H * 360 - ecart + 360) % 360;
 };
+
+void couleurQuadratique(double H, double &H1, double &H2, double &H3){
+    //entre 0 et 1
+    H1 = fmod((H + 90/360.0), 1.0);
+    H2 = fmod((H - 90/360.0 + 1.0), 1.0);
+    H3 = fmod((H - 180/360.0 + 1.0), 1.0);
+    //entre 0 et 360
+    //H1 = (int)(H * 360 + ecart) % 360;
+    //H2 = (int)(H * 360 - ecart + 360) % 360;
+};
+
+void Complementaire(OCTET *ImgOutRGB,vector<double> ImgInHSL, int nH, int nW,double teinte, OCTET *segmentation, int* tabK){
+    double complementaire=couleurComplementaire(teinte);
+    int red= tabK[0];int blue= tabK[1];int green= tabK[2];    
+    double R,G,B,m;
+    for (int i=0;i<nH*nW*3;i+=3){
+        double S=ImgInHSL[i+1];
+        double L=ImgInHSL[i+2];
+        if(segmentation[i]==red&&segmentation[i+1]==blue&&segmentation[i+2]==green){
+
+            pixel_HSL_to_RGB(teinte,S,L,R,G,B,m);
+            
+            ImgOutRGB[i]=R+m>1?255:(R+m)*255.0;
+            ImgOutRGB[i+1]=G+m>1?255:(G+m)*255.0;
+            ImgOutRGB[i+2]=B+m>1?255:(B+m)*255.0;
+        }
+        else{
+            pixel_HSL_to_RGB(complementaire,S,L,R,G,B,m);
+            
+            ImgOutRGB[i]=R+m>1?255:(R+m)*255.0;
+            ImgOutRGB[i+1]=G+m>1?255:(G+m)*255.0;
+            ImgOutRGB[i+2]=B+m>1?255:(B+m)*255.0;
+        }
+    }
+}
+
+void Triadique(OCTET *ImgOutRGB,vector<double> ImgInHSL, int nH, int nW,double teinte,int ecart, OCTET *segmentation,int* tabK){
+    double teinte2, teinte3;    
+    couleurAnalogue(teinte,teinte2,teinte3,ecart);
+    int red= tabK[0];int blue= tabK[1];int green= tabK[2];    
+    int red2= tabK[3];int blue2= tabK[4];int green2= tabK[5];    
+    double R,G,B,m;
+    for (int i=0;i<nH*nW*3;i+=3){
+        double S=ImgInHSL[i+1];
+        double L=ImgInHSL[i+2];
+        if(segmentation[i]==red&&segmentation[i+1]==blue&&segmentation[i+2]==green){
+
+            pixel_HSL_to_RGB(teinte,S,L,R,G,B,m);
+            
+            ImgOutRGB[i]=R+m>1?255:(R+m)*255.0;
+            ImgOutRGB[i+1]=G+m>1?255:(G+m)*255.0;
+            ImgOutRGB[i+2]=B+m>1?255:(B+m)*255.0;
+        }
+        else if(segmentation[i]==red2&&segmentation[i+1]==blue2&&segmentation[i+2]==green2){
+
+            pixel_HSL_to_RGB(teinte2,S,L,R,G,B,m);
+            
+            ImgOutRGB[i]=R+m>1?255:(R+m)*255.0;
+            ImgOutRGB[i+1]=G+m>1?255:(G+m)*255.0;
+            ImgOutRGB[i+2]=B+m>1?255:(B+m)*255.0;
+        }
+        else{
+            pixel_HSL_to_RGB(teinte3,S,L,R,G,B,m);
+            
+            ImgOutRGB[i]=R+m>1?255:(R+m)*255.0;
+            ImgOutRGB[i+1]=G+m>1?255:(G+m)*255.0;
+            ImgOutRGB[i+2]=B+m>1?255:(B+m)*255.0;
+        }
+    }
+}
 
