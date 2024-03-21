@@ -6,7 +6,7 @@
 #include <cmath>
 #include <iostream>
 #include "harmonie.cpp"
-#include "segmentationKmean.cpp"
+
 
 
 
@@ -38,20 +38,11 @@ int main(int argc, char* argv[])
    allocation_tableau(ImgIn, OCTET, nTaille3);
    lire_image_ppm(cNomImgLue, ImgIn, nH * nW);
    allocation_tableau(ImgOut, OCTET, nTaille3);
-   allocation_tableau(ImgSegm, OCTET, nTaille3);
 
+  std::vector<Color> ImgHSL;
+  octetToColorVec(ImgIn, ImgHSL, nTaille3);
+  Complementaire(ImgOut, ImgHSL, nH, nW, teinte);
 
-    int tabK[nbK*3];
-  tabCouleur(ImgIn, ImgSegm,tabK,nbK,nTaille);
-//  for(int i=0;i<nbK*3;i+=3){
-//    std::cout<<tabK[i]<<" "<<tabK[i+1]<<" "<<tabK[i+2]<<std::endl;
-//  }
-    vector<double> ImgHSL;
-    ImgHSL.resize(nTaille3);
-    double H,S,L;
-    pixel_RGB_to_HSL(tabK[0],tabK[1],tabK[2],H,S,L);
-    RGB_to_HSL(ImgIn, ImgHSL, nH, nW);
-    Complementaire(ImgOut, ImgHSL, nH, nW, teinte, ImgSegm,tabK);
    ecrire_image_ppm(cNomImgEcrite, ImgOut,  nH, nW);
    free(ImgIn);
    return 1;

@@ -92,7 +92,6 @@ void HSL_to_RGB(OCTET *ImgOutRGB,vector<double> ImgInHSL, int nH, int nW){
 };
 
 void monoChromatique(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW, double color, double saturation){
-    double R,G,B,m;
     Color outColor;
 
     for (int i=0; i < nH*nW; i++){
@@ -146,13 +145,12 @@ void couleurQuadratique(double H, double &H1, double &H2, double &H3){
 
 void Complementaire(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte){
     double complementaire=couleurComplementaire(teinte);
-    double R,G,B,m;
     Color outColor;
     OCTET *segmentation;
+    allocation_tableau(segmentation, OCTET, nH  * nW * 3);
     std::vector<Color> tabK = get_dominant_colors(segmentation, ImgIn, 2, nH, nW);
-
     for (int i=0; i<nH*nW; i++){
-        outColor.h = (segmentation[i]==tabK[0].r && segmentation[i+1]==tabK[0].g && segmentation[i+2]==tabK[0].b) ? teinte : complementaire;
+        outColor.h = (segmentation[i*3]==tabK[0].r && segmentation[i*3+1]==tabK[0].g && segmentation[i*3+2]==tabK[0].b) ? teinte : complementaire;
         outColor.s=ImgIn[i].s;
         outColor.l=ImgIn[i].l;
         outColor.HSL_to_RGB();
@@ -163,38 +161,31 @@ void Complementaire(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double tei
     }
 }
 
-void Triadique(OCTET *ImgOutRGB,vector<double> ImgInHSL, int nH, int nW,double teinte,int ecart, OCTET *segmentation,int* tabK){
+void Triadique(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte,int ecart){
     double teinte2, teinte3;    
     couleurTriadique(teinte,teinte2,teinte3,ecart);
-    int red= tabK[0];int blue= tabK[1];int green= tabK[2];    
-    int red2= tabK[3];int blue2= tabK[4];int green2= tabK[5];    
-    double R,G,B,m;
-    for (int i=0;i<nH*nW*3;i+=3){
-        double S=ImgInHSL[i+1];
-        double L=ImgInHSL[i+2];
-        if(segmentation[i]==red&&segmentation[i+1]==blue&&segmentation[i+2]==green){
+    Color outColor;
+    OCTET *segmentation;
+    allocation_tableau(segmentation, OCTET, nH  * nW * 3);
+    std::vector<Color> tabK = get_dominant_colors(segmentation, ImgIn, 2, nH, nW);
 
-            pixel_HSL_to_RGB(teinte,S,L,R,G,B,m);
-            
-            ImgOutRGB[i]=R+m>1?255:(R+m)*255.0;
-            ImgOutRGB[i+1]=G+m>1?255:(G+m)*255.0;
-            ImgOutRGB[i+2]=B+m>1?255:(B+m)*255.0;
+    for (int i=0;i<nH*nW;i++){
+        if(segmentation[i*3] == tabK[0].r &&segmentation[i*3+1] == tabK[0].g && segmentation[i*3+2] == tabK[0].b ){
+            outColor.h =teinte;
         }
-        else if(segmentation[i]==red2&&segmentation[i+1]==blue2&&segmentation[i+2]==green2){
-
-            pixel_HSL_to_RGB(teinte2,S,L,R,G,B,m);
-            
-            ImgOutRGB[i]=R+m>1?255:(R+m)*255.0;
-            ImgOutRGB[i+1]=G+m>1?255:(G+m)*255.0;
-            ImgOutRGB[i+2]=B+m>1?255:(B+m)*255.0;
+        else if(segmentation[i*3] == tabK[1].r && segmentation[i*3+1] == tabK[1].g && segmentation[i*3+2] == tabK[1].b ){
+            outColor.h =teinte2;
         }
         else{
-            pixel_HSL_to_RGB(teinte3,S,L,R,G,B,m);
-            
-            ImgOutRGB[i]=R+m>1?255:(R+m)*255.0;
-            ImgOutRGB[i+1]=G+m>1?255:(G+m)*255.0;
-            ImgOutRGB[i+2]=B+m>1?255:(B+m)*255.0;
+            outColor.h =teinte3;
         }
+        outColor.s=ImgIn[i].s;
+        outColor.l=ImgIn[i].l;
+        outColor.HSL_to_RGB();
+
+        ImgOut[i*3]= outColor.r;
+        ImgOut[i*3+1]= outColor.g;
+        ImgOut[i*3+2]= outColor.b;
     }
 }
 

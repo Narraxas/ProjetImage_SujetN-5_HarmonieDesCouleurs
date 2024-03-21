@@ -88,7 +88,6 @@ void kmeans(const vector<Color>& pixels, vector<Color>& centroids, int k, int ma
 vector<Color> get_dominant_colors(OCTET *ImgOut, const vector<Color>& pixels, int number_of_dominant_colors, int nH, int nW) {
     std::vector<Color> ImgKmean;
     int nTaille3 = (nH * nW) * 3;
-    allocation_tableau(ImgOut, OCTET, nTaille3);
 
     vector<Color> centroids;
     kmeans(pixels, centroids, number_of_dominant_colors, 30);
@@ -128,7 +127,8 @@ vector<Color> get_dominant_colors(OCTET *ImgOut, const vector<Color>& pixels, in
         ImgOut[z+1] = ImgKmean[z/3].g;
         ImgOut[z+2] = ImgKmean[z/3].b;
     }
-    // ecrire_image_ppm((char *)"out/Image_Kmean.ppm", ImgOut, nH, nW);
+    //ecrire_image_ppm((char *)"out/Image_Kmean.ppm", ImgOut, nH, nW);
+
 
     return dominant_colors;
 }

@@ -8,6 +8,7 @@
 
 SRC = src/testMono.cpp
 
+
 CC =	g++
 
 OBJ =	$(SRC:.c=.o)
