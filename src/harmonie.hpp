@@ -24,9 +24,11 @@ void monoChromatique(OCTET *ImgOut, vector<Color> ImgIn, int nH, int nW, double 
 
 void Complementaire(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte);
 
-void Triadique(OCTET *ImgOutRGB,vector<double> ImgInHSL, int nH, int nW,double teinte,int ecart);
+void Triadique(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte,int ecart);
 
-void Analogue(OCTET *ImgOutRGB,vector<double> ImgInHSL, int nH, int nW,double teinte,int ecart, OCTET *segmentation,int* tabK);
+void Quadratique(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte);
+
+void Analogue(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte,int ecart);
 
 void vector_to_OCTETtab(vector<double> vector,OCTET *octet_tab);
 void octetToColorVec(OCTET *octetTab, vector<Color> &colorVec, int nTaille3);
