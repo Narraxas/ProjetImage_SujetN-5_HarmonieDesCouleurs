@@ -6,14 +6,14 @@
 ##
 
 
-SRC = src/testMono.cpp
+SRC = src/getDominantColor.cpp
 
 
 CC =	g++
 
 OBJ =	$(SRC:.c=.o)
 
-NAME =		monoChr
+NAME =		createPalette
 
 CFLAGS = -lm
 

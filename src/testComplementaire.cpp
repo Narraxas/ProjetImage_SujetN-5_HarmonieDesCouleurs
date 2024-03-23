@@ -7,12 +7,6 @@
 #include <iostream>
 #include "harmonie.cpp"
 
-
-
-
-
-
-
 int main(int argc, char* argv[])
 {
   char cNomImgLue[250], cNomImgEcrite[250],cNomImgEcriteMoy[250],cNomImgEcriteConv[250];
