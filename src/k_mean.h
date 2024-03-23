@@ -148,25 +148,39 @@ std::vector<Color> createColorPalette(OCTET* Img, int nTaille3)
     return tab;
 }
 
-// void createPaletteImage(OCTET* &PaletteImg, std::vector<Color> &palette, int nTaille3, int &nW, int &nH)
-// {
-//     int tailleImg_x = ceil(sqrt(palette.size()));
-//     int tailleImg = tailleImg_x*tailleImg_x;
-//     int tailleImg3 = tailleImg*3;
-//     nW = tailleImg_x;
-//     nH = tailleImg_x;
+void createPaletteImage(OCTET* &PaletteImg, std::vector<Color> &palette, int nTaille3, int &nW, int &nH)
+{
+    int tailleImg = nW*nH;
+    int tailleImg3 = tailleImg*3;
+    int paletteSize = palette.size();
+    int numCols = std::ceil(std::sqrt(paletteSize)); // Nombre de colonnes dans l'image de la palette
+    int numRows = (paletteSize + numCols - 1) / numCols; // Nombre de lignes
 
-//     allocation_tableau(PaletteImg, OCTET, tailleImg3);
+    int cW = nW / numCols;
+    int cH = nH / numRows;
+    allocation_tableau(PaletteImg, OCTET, tailleImg3);
 
-//     int index = 0;
-//     for(int i = 0; i < palette.size(); i++)
-//     {
-//         PaletteImg[index] = palette[i].r;
-//         PaletteImg[index+1] = palette[i].g;
-//         PaletteImg[index+2] = palette[i].b;
-//         index = index + 3;
-//     }
-// }
+    // Parcourir la palette et placer chaque couleur dans l'image de la palette
+    for(int i = 0; i < paletteSize; i++)
+    {
+        int row = i / numCols; // Ligne actuelle
+        int col = i % numCols; // Colonne actuelle
+
+        // Position de départ de la couleur dans l'image
+        int startX = col * cW;
+        int startY = row * cH;
+
+        // Copier la couleur dans l'image de la palette
+        for (int y = 0; y < cH; y++) {
+            for (int x = 0; x < cW; x++) {
+                int destIndex = ((startY + y) * nW + (startX + x)) * 3;
+                PaletteImg[destIndex] = palette[i].r;
+                PaletteImg[destIndex + 1] = palette[i].g;
+                PaletteImg[destIndex + 2] = palette[i].b;
+            }
+        }
+    }
+}
 
 void convertColorToIndexedGrey(OCTET* ImgIn, OCTET* ImgOut, std::vector<Color> &palette, int nTaille3)
 {
