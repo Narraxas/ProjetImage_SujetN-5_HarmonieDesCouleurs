@@ -1,18 +1,18 @@
 ##
-## SYSTEM PROJECT, 2021
+## HARMONY PROJECT, 2021
 ## makefile
 ## File description:
 ## file
 ##
 
 
-SRC = src/main.cpp
+SRC = src/App/ImageProcessingApp.cpp
 
 CC =	g++
 
 OBJ =	$(SRC:.c=.o)
 
-NAME =		getDominantColors
+NAME =		app
 
 CFLAGS = -lm
 
