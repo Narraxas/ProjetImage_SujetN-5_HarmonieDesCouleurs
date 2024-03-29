@@ -19,15 +19,15 @@ void pixel_RGB_to_HSL(double R, double G,double B, double &H, double &S, double 
     if(maxVal==minVal){
         S=0;
         H=0;
-    } 
+    }
     else{
         S=(L<0.5)?((maxVal-minVal)/(maxVal+minVal)):((maxVal-minVal)/(2.0-maxVal-minVal));
         if(maxVal==R){
             H=(G-B)/(maxVal-minVal)+((G<B)?6.0:0.0);
-        } 
+        }
         else if(maxVal==G){
             H=2.0+(B-R)/(maxVal-minVal);
-        } 
+        }
         else{
             H=4.0+(R-G)/(maxVal-minVal);
         }
@@ -84,10 +84,10 @@ void HSL_to_RGB(OCTET *ImgOutRGB,vector<double> ImgInHSL, int nH, int nW){
         double L=ImgInHSL[i+2];
 
         pixel_HSL_to_RGB(H,S,L,R,G,B,m);
-        
+
         ImgOutRGB[i]=R+m>1?255:(R+m)*255.0;
         ImgOutRGB[i+1]=G+m>1?255:(G+m)*255.0;
-        ImgOutRGB[i+2]=B+m>1?255:(B+m)*255.0;        
+        ImgOutRGB[i+2]=B+m>1?255:(B+m)*255.0;
     }
 };
 
@@ -100,7 +100,7 @@ void monoChromatique(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW, double c
         outColor.l = ImgIn[i].l;
 
         outColor.HSL_to_RGB();
-        
+
         ImgOut[i*3] = outColor.r;
         ImgOut[i*3+1] = outColor.g;
         ImgOut[i*3+2] = outColor.b;
@@ -162,7 +162,7 @@ void Complementaire(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double tei
 }
 
 void Triadique(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte,int ecart){
-    double teinte2, teinte3;    
+    double teinte2, teinte3;
     couleurTriadique(teinte,teinte2,teinte3,ecart);
     Color outColor;
     OCTET *segmentation;
@@ -195,7 +195,7 @@ void Quadratique(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte
     allocation_tableau(segmentation, OCTET, nH  * nW * 3);
     std::vector<Color> tabK = get_dominant_colors(segmentation, ImgIn, 4, nH, nW);
     //teinte=tabK[0].h;
-    double teinte2, teinte3, teinte4;    
+    double teinte2, teinte3, teinte4;
     couleurQuadratique(teinte,teinte2,teinte3,teinte4);
     for (int i=0;i<nH*nW;i++){
         if(segmentation[i*3] == tabK[0].r &&segmentation[i*3+1] == tabK[0].g && segmentation[i*3+2] == tabK[0].b ){
@@ -226,10 +226,10 @@ void Analogue(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte,in
     allocation_tableau(segmentation, OCTET, nH  * nW * 3);
     std::vector<Color> tabK = get_dominant_colors(segmentation, ImgIn, 1, nH, nW);
     Color couleurDominante(tabK[0].r ,tabK[0].g ,tabK[0].b );
-     for (int i=0;i<nH*nW;i++){
+    for (int i=0;i<nH*nW;i++){
         double dist = couleurDominante.h*360 - ImgIn[i].h*360 ;
         double couleur=dist > 0 ? teinte*360 + (sqrt(dist*dist)*2*ecart)/360 : teinte*360 - (sqrt(dist*dist)*2*ecart)/360;
-        outColor.h =couleur<0? fmod(couleur /360.0 +1,1.0) : fmod(couleur /360.0 ,1.0) ; 
+        outColor.h =couleur<0? fmod(couleur /360.0 +1,1.0) : fmod(couleur /360.0 ,1.0) ;
         outColor.s=ImgIn[i].s;
         outColor.l=ImgIn[i].l;
         outColor.HSL_to_RGB();

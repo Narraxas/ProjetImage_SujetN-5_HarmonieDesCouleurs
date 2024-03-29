@@ -1,13 +1,23 @@
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QLabel>
 #include <QtWidgets>
 #include <QProcess>
+#include <QColorDialog>
+
+#include <iostream>
+#include <vector>
+
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
+#include "image_ppm.h"
+#include "Color.hpp"
+#include "harmonie.hpp"
 
 QString originalFrameFilePath;
-QString modifiedFrameFilePath;
+QString modifiedFrameFilePath = "ImgOut.ppm";
+QString selectedHarmony;
+QColor color(255, 255, 255);
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -42,36 +52,82 @@ void MainWindow::on_pushButton_clicked()
     }
 }
 
+int writeMonochromatique(double color, double saturation)
+{
+    int nH, nW, nTaille;
+    OCTET *ImgIn, *ImgOut;
+    char cNomImgLue[originalFrameFilePath.length() + 1];
+    strcpy(cNomImgLue, originalFrameFilePath.toUtf8().constData());
+    char cNomImgEcrite[modifiedFrameFilePath.length() + 1];
+    strcpy(cNomImgEcrite, modifiedFrameFilePath.toUtf8().constData());
+
+    lire_nb_lignes_colonnes_image_ppm(cNomImgLue, &nH, &nW);
+    nTaille = nH * nW;
+
+    int nTaille3 = nTaille * 3;
+    allocation_tableau(ImgIn, OCTET, nTaille3);
+    lire_image_ppm(cNomImgLue, ImgIn, nH * nW);
+    allocation_tableau(ImgOut, OCTET, nTaille3);
+
+    std::vector<Color> ImgHSL;
+    octetToColorVec(ImgIn, ImgHSL, nTaille3);
+    std::cout << ImgHSL.size() << std::endl;
+    monoChromatique(ImgOut, ImgHSL, nH, nW, color, saturation);
+
+    ecrire_image_ppm(cNomImgEcrite, ImgOut,  nH, nW);
+    free(ImgIn);
+    return 1;
+}
+
+
+int writeComplementaire(double color, double saturation)
+{
+    int nH, nW, nTaille;
+    OCTET *ImgIn, *ImgOut;
+    char cNomImgLue[originalFrameFilePath.length() + 1];
+    strcpy(cNomImgLue, originalFrameFilePath.toUtf8().constData());
+    char cNomImgEcrite[modifiedFrameFilePath.length() + 1];
+    strcpy(cNomImgEcrite, modifiedFrameFilePath.toUtf8().constData());
+
+    lire_nb_lignes_colonnes_image_ppm(cNomImgLue, &nH, &nW);
+    nTaille = nH * nW;
+
+    int nTaille3 = nTaille * 3;
+    allocation_tableau(ImgIn, OCTET, nTaille3);
+    lire_image_ppm(cNomImgLue, ImgIn, nH * nW);
+    allocation_tableau(ImgOut, OCTET, nTaille3);
+
+    std::vector<Color> ImgHSL;
+    octetToColorVec(ImgIn, ImgHSL, nTaille3);
+    std::cout << ImgHSL.size() << std::endl;
+    monoChromatique(ImgOut, ImgHSL, nH, nW, color, saturation);
+
+    ecrire_image_ppm(cNomImgEcrite, ImgOut,  nH, nW);
+    free(ImgIn);
+    return 1;
+}
 
 void MainWindow::on_harmonyComboBox_currentTextChanged(const QString &arg1)
 {
-    // QMessageBox::information(this, "Selected harmony", arg1);
+    selectedHarmony = arg1;
+}
 
-    // Spécifier le chemin de l'exécutable à appeler
-    // if (arg1 == "monochromatique")
-    // QString outputName = "../../../out/Palette.ppm";
-    // QString command = arg1 + ".sh " + originalFrameFilePath + " 4";
+void MainWindow::on_colorBtn_clicked()
+{
+    color = QColorDialog::getColor(color, this, "Choose a color");
+    // std::cout << (int)color.hue() << std::endl;
 
-    // Vérifier si le fichier existe
-    /*if (!QFile::exists(command)) {
-        qDebug() << "Le fichier n'existe pas à l'emplacement spécifié.";
-        return;
-    }*/
+    // Print the hue value
+    // qDebug() << "Hue value of the color:" << hue;
 
-    // Exécuter la commande
-    // int result = system(command.toUtf8().constData());
+}
 
-    // // Vérifier le résultat
-    // if (result == -1) {
-    //     qDebug() << "Failed to execute the command.";
-    //     return;
-    // } else {
-    //     qDebug() << "Command executed successfully.";
-    // }
 
-    // QMessageBox::information(this, "Process fnished sucessfully", "OK");
-    modifiedFrameFilePath = QFileDialog::getOpenFileName(this, "Choose an image to display", "../../../in");
-    // QMessageBox::information(this, "FilePath of the image", filePath);
+void MainWindow::on_pushButton_2_clicked()
+{
+    if (selectedHarmony == "Monochromatique") {
+        writeMonochromatique(color.hue()/360.0f, color.saturation()/255.0f);
+    }
 
     if (ui->modifiedFrame) {
         // Charger l'image

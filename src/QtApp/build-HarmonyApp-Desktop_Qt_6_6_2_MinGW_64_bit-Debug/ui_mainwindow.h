@@ -31,6 +31,8 @@ public:
     QFrame *originalFrame;
     QComboBox *harmonyComboBox;
     QFrame *modifiedFrame;
+    QPushButton *colorBtn;
+    QPushButton *pushButton_2;
     QMenuBar *menubar;
     QMenu *menuHarmony_Application;
     QStatusBar *statusbar;
@@ -70,6 +72,13 @@ public:
         modifiedFrame->setStyleSheet(QString::fromUtf8("background-color: rgb(255, 255, 255);"));
         modifiedFrame->setFrameShape(QFrame::StyledPanel);
         modifiedFrame->setFrameShadow(QFrame::Raised);
+        colorBtn = new QPushButton(centralwidget);
+        colorBtn->setObjectName("colorBtn");
+        colorBtn->setGeometry(QRect(180, 450, 171, 24));
+        colorBtn->setStyleSheet(QString::fromUtf8("background-color: rgb(190, 183, 183);"));
+        pushButton_2 = new QPushButton(centralwidget);
+        pushButton_2->setObjectName("pushButton_2");
+        pushButton_2->setGeometry(QRect(20, 490, 331, 51));
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
@@ -99,6 +108,8 @@ public:
         harmonyComboBox->setItemText(4, QCoreApplication::translate("MainWindow", "Triadique", nullptr));
         harmonyComboBox->setItemText(5, QCoreApplication::translate("MainWindow", "Quadratique", nullptr));
 
+        colorBtn->setText(QCoreApplication::translate("MainWindow", "Choose a color", nullptr));
+        pushButton_2->setText(QCoreApplication::translate("MainWindow", "Generate the image", nullptr));
         menuHarmony_Application->setTitle(QCoreApplication::translate("MainWindow", "Harmony Application", nullptr));
     } // retranslateUi
 

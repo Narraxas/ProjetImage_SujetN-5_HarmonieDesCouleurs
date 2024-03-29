@@ -22,6 +22,10 @@ private slots:
 
     void on_harmonyComboBox_currentTextChanged(const QString &arg1);
 
+    void on_colorBtn_clicked();
+
+    void on_pushButton_2_clicked();
+
 private:
     Ui::MainWindow *ui;
 };
