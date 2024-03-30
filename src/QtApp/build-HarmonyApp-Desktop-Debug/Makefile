@@ -353,7 +353,6 @@ DIST          = ../HarmonyApp/HarmonyApp.pro.user \
 		/home/deroubaix/Qt/6.6.2/gcc_64/mkspecs/features/qt_config.prf \
 		/home/deroubaix/Qt/6.6.2/gcc_64/mkspecs/linux-g++/qmake.conf \
 		/home/deroubaix/Qt/6.6.2/gcc_64/mkspecs/features/spec_post.prf \
-		../HarmonyApp/.qmake.stash \
 		/home/deroubaix/Qt/6.6.2/gcc_64/mkspecs/features/exclusive_builds.prf \
 		/home/deroubaix/Qt/6.6.2/gcc_64/mkspecs/features/toolchain.prf \
 		/home/deroubaix/Qt/6.6.2/gcc_64/mkspecs/features/default_pre.prf \
@@ -683,7 +682,6 @@ Makefile: ../HarmonyApp/HarmonyApp.pro /home/deroubaix/Qt/6.6.2/gcc_64/mkspecs/l
 		/home/deroubaix/Qt/6.6.2/gcc_64/mkspecs/features/qt_config.prf \
 		/home/deroubaix/Qt/6.6.2/gcc_64/mkspecs/linux-g++/qmake.conf \
 		/home/deroubaix/Qt/6.6.2/gcc_64/mkspecs/features/spec_post.prf \
-		.qmake.stash \
 		/home/deroubaix/Qt/6.6.2/gcc_64/mkspecs/features/exclusive_builds.prf \
 		/home/deroubaix/Qt/6.6.2/gcc_64/mkspecs/features/toolchain.prf \
 		/home/deroubaix/Qt/6.6.2/gcc_64/mkspecs/features/default_pre.prf \
@@ -1005,7 +1003,6 @@ Makefile: ../HarmonyApp/HarmonyApp.pro /home/deroubaix/Qt/6.6.2/gcc_64/mkspecs/l
 /home/deroubaix/Qt/6.6.2/gcc_64/mkspecs/features/qt_config.prf:
 /home/deroubaix/Qt/6.6.2/gcc_64/mkspecs/linux-g++/qmake.conf:
 /home/deroubaix/Qt/6.6.2/gcc_64/mkspecs/features/spec_post.prf:
-.qmake.stash:
 /home/deroubaix/Qt/6.6.2/gcc_64/mkspecs/features/exclusive_builds.prf:
 /home/deroubaix/Qt/6.6.2/gcc_64/mkspecs/features/toolchain.prf:
 /home/deroubaix/Qt/6.6.2/gcc_64/mkspecs/features/default_pre.prf:
@@ -2008,14 +2005,6 @@ mainwindow.o: ../HarmonyApp/mainwindow.cpp /home/deroubaix/Qt/6.6.2/gcc_64/inclu
 		../HarmonyApp/mainwindow.h \
 		/home/deroubaix/Qt/6.6.2/gcc_64/include/QtWidgets/QMainWindow \
 		ui_mainwindow.h \
-		/home/deroubaix/Qt/6.6.2/gcc_64/include/QtWidgets/QApplication \
-		/home/deroubaix/Qt/6.6.2/gcc_64/include/QtWidgets/QComboBox \
-		/home/deroubaix/Qt/6.6.2/gcc_64/include/QtWidgets/QFrame \
-		/home/deroubaix/Qt/6.6.2/gcc_64/include/QtWidgets/QMenu \
-		/home/deroubaix/Qt/6.6.2/gcc_64/include/QtWidgets/QMenuBar \
-		/home/deroubaix/Qt/6.6.2/gcc_64/include/QtWidgets/QPushButton \
-		/home/deroubaix/Qt/6.6.2/gcc_64/include/QtWidgets/QStatusBar \
-		/home/deroubaix/Qt/6.6.2/gcc_64/include/QtWidgets/QWidget \
 		../HarmonyApp/image_ppm.h \
 		../HarmonyApp/Color.hpp \
 		../HarmonyApp/harmonie.hpp \
