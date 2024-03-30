@@ -79,7 +79,6 @@ int writeMonochromatique(double color, double saturation)
     return 1;
 }
 
-
 int writeComplementaire(double color, double saturation)
 {
     int nH, nW, nTaille;
@@ -100,7 +99,148 @@ int writeComplementaire(double color, double saturation)
     std::vector<Color> ImgHSL;
     octetToColorVec(ImgIn, ImgHSL, nTaille3);
     std::cout << ImgHSL.size() << std::endl;
-    monoChromatique(ImgOut, ImgHSL, nH, nW, color, saturation);
+    Complementaire(ImgOut, ImgHSL, nH, nW, color,saturation);
+
+    ecrire_image_ppm(cNomImgEcrite, ImgOut,  nH, nW);
+    free(ImgIn);
+    return 1;
+}
+
+int writeComplementaire_B(double color, double saturation)
+{
+    int nH, nW, nTaille;
+    OCTET *ImgIn, *ImgOut;
+    char cNomImgLue[originalFrameFilePath.length() + 1];
+    strcpy(cNomImgLue, originalFrameFilePath.toUtf8().constData());
+    char cNomImgEcrite[modifiedFrameFilePath.length() + 1];
+    strcpy(cNomImgEcrite, modifiedFrameFilePath.toUtf8().constData());
+
+    lire_nb_lignes_colonnes_image_ppm(cNomImgLue, &nH, &nW);
+    nTaille = nH * nW;
+
+    int nTaille3 = nTaille * 3;
+    allocation_tableau(ImgIn, OCTET, nTaille3);
+    lire_image_ppm(cNomImgLue, ImgIn, nH * nW);
+    allocation_tableau(ImgOut, OCTET, nTaille3);
+
+    std::vector<Color> ImgHSL;
+    octetToColorVec(ImgIn, ImgHSL, nTaille3);
+    std::cout << ImgHSL.size() << std::endl;
+    Complementaire_B(ImgOut, ImgHSL, nH, nW, color,saturation);
+
+    ecrire_image_ppm(cNomImgEcrite, ImgOut,  nH, nW);
+    free(ImgIn);
+    return 1;
+}
+
+int writeAnalogue(double color, double saturation)
+{
+    int nH, nW, nTaille;
+    OCTET *ImgIn, *ImgOut;
+    char cNomImgLue[originalFrameFilePath.length() + 1];
+    strcpy(cNomImgLue, originalFrameFilePath.toUtf8().constData());
+    char cNomImgEcrite[modifiedFrameFilePath.length() + 1];
+    strcpy(cNomImgEcrite, modifiedFrameFilePath.toUtf8().constData());
+
+    lire_nb_lignes_colonnes_image_ppm(cNomImgLue, &nH, &nW);
+    nTaille = nH * nW;
+
+    int nTaille3 = nTaille * 3;
+    allocation_tableau(ImgIn, OCTET, nTaille3);
+    lire_image_ppm(cNomImgLue, ImgIn, nH * nW);
+    allocation_tableau(ImgOut, OCTET, nTaille3);
+
+    int ecart=90;//A MODIFIER
+
+    std::vector<Color> ImgHSL;
+    octetToColorVec(ImgIn, ImgHSL, nTaille3);
+    std::cout << ImgHSL.size() << std::endl;
+    Analogue(ImgOut, ImgHSL, nH, nW, color,ecart,saturation);
+
+    ecrire_image_ppm(cNomImgEcrite, ImgOut,  nH, nW);
+    free(ImgIn);
+    return 1;
+}
+
+int writeTriadique(double color, double saturation)
+{
+    int nH, nW, nTaille;
+    OCTET *ImgIn, *ImgOut;
+    char cNomImgLue[originalFrameFilePath.length() + 1];
+    strcpy(cNomImgLue, originalFrameFilePath.toUtf8().constData());
+    char cNomImgEcrite[modifiedFrameFilePath.length() + 1];
+    strcpy(cNomImgEcrite, modifiedFrameFilePath.toUtf8().constData());
+
+    lire_nb_lignes_colonnes_image_ppm(cNomImgLue, &nH, &nW);
+    nTaille = nH * nW;
+
+    int nTaille3 = nTaille * 3;
+    allocation_tableau(ImgIn, OCTET, nTaille3);
+    lire_image_ppm(cNomImgLue, ImgIn, nH * nW);
+    allocation_tableau(ImgOut, OCTET, nTaille3);
+
+    int ecart=120;
+
+    std::vector<Color> ImgHSL;
+    octetToColorVec(ImgIn, ImgHSL, nTaille3);
+    std::cout << ImgHSL.size() << std::endl;
+    Triadique(ImgOut, ImgHSL, nH, nW, color,ecart,saturation);
+
+    ecrire_image_ppm(cNomImgEcrite, ImgOut,  nH, nW);
+    free(ImgIn);
+    return 1;
+}
+
+int writeTriadique_B(double color, double saturation)
+{
+    int nH, nW, nTaille;
+    OCTET *ImgIn, *ImgOut;
+    char cNomImgLue[originalFrameFilePath.length() + 1];
+    strcpy(cNomImgLue, originalFrameFilePath.toUtf8().constData());
+    char cNomImgEcrite[modifiedFrameFilePath.length() + 1];
+    strcpy(cNomImgEcrite, modifiedFrameFilePath.toUtf8().constData());
+
+    lire_nb_lignes_colonnes_image_ppm(cNomImgLue, &nH, &nW);
+    nTaille = nH * nW;
+
+    int nTaille3 = nTaille * 3;
+    allocation_tableau(ImgIn, OCTET, nTaille3);
+    lire_image_ppm(cNomImgLue, ImgIn, nH * nW);
+    allocation_tableau(ImgOut, OCTET, nTaille3);
+
+    int ecart=120;
+
+    std::vector<Color> ImgHSL;
+    octetToColorVec(ImgIn, ImgHSL, nTaille3);
+    std::cout << ImgHSL.size() << std::endl;
+    Triadique_B(ImgOut, ImgHSL, nH, nW, color,ecart,saturation);
+
+    ecrire_image_ppm(cNomImgEcrite, ImgOut,  nH, nW);
+    free(ImgIn);
+    return 1;
+}
+
+int writeQuadratique(double color, double saturation)
+{
+    int nH, nW, nTaille;
+    OCTET *ImgIn, *ImgOut;
+    char cNomImgLue[originalFrameFilePath.length() + 1];
+    strcpy(cNomImgLue, originalFrameFilePath.toUtf8().constData());
+    char cNomImgEcrite[modifiedFrameFilePath.length() + 1];
+    strcpy(cNomImgEcrite, modifiedFrameFilePath.toUtf8().constData());
+
+    lire_nb_lignes_colonnes_image_ppm(cNomImgLue, &nH, &nW);
+    nTaille = nH * nW;
+
+    int nTaille3 = nTaille * 3;
+    allocation_tableau(ImgIn, OCTET, nTaille3);
+    lire_image_ppm(cNomImgLue, ImgIn, nH * nW);
+    allocation_tableau(ImgOut, OCTET, nTaille3);
+
+    std::vector<Color> ImgHSL;
+    octetToColorVec(ImgIn, ImgHSL, nTaille3);
+    std::cout << ImgHSL.size() << std::endl;
+    Quadratique(ImgOut, ImgHSL, nH, nW, color,saturation);
 
     ecrire_image_ppm(cNomImgEcrite, ImgOut,  nH, nW);
     free(ImgIn);
@@ -122,11 +262,33 @@ void MainWindow::on_colorBtn_clicked()
 
 }
 
-
 void MainWindow::on_pushButton_2_clicked()
 {
     if (selectedHarmony == "Monochromatique") {
         writeMonochromatique(color.hue()/360.0f, color.saturation()/255.0f);
+    }
+
+    if (selectedHarmony == "Complémentaire") {
+        writeComplementaire(color.hue()/360.0f, color.saturation()/255.0f);
+    }
+
+    if (selectedHarmony == "ComplémentaireB") {
+        writeComplementaire_B(color.hue()/360.0f, color.saturation()/255.0f);
+    }
+
+    if (selectedHarmony == "Triadique") {
+        writeTriadique(color.hue()/360.0f, color.saturation()/255.0f);
+    }
+
+    if (selectedHarmony == "TriadiqueB") {
+        writeTriadique_B(color.hue()/360.0f, color.saturation()/255.0f);
+    }
+
+    if (selectedHarmony == "Quadratique") {
+        writeQuadratique(color.hue()/360.0f, color.saturation()/255.0f);
+    }
+    if (selectedHarmony == "Analogue") {
+        writeAnalogue(color.hue()/360.0f, color.saturation()/255.0f);
     }
 
     if (ui->modifiedFrame) {

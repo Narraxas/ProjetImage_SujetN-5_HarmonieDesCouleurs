@@ -134,6 +134,9 @@ void couleurTriadique(double H, double &H1, double &H2, int ecart){//ecart en de
     //entre 0 et 1
     H1 = fmod((H + ecart/360.0), 1.0);
     H2 = fmod((H - ecart/360.0 + 1.0), 1.0);
+    //std::cout<<H<<std::endl;
+    //std::cout<<H1<<std::endl;
+    //std::cout<<H2<<std::endl;
     //entre 0 et 360
     //H1 = (int)(H * 360 + ecart) % 360;
     //H2 = (int)(H * 360 - ecart + 360) % 360;
@@ -142,14 +145,14 @@ void couleurTriadique(double H, double &H1, double &H2, int ecart){//ecart en de
 void couleurQuadratique(double H, double &H1, double &H2, double &H3){
     //entre 0 et 1
     H1 = fmod((H + 90/360.0), 1.0);
-    H2 = fmod((H - 90/360.0 + 1.0), 1.0);
-    H3 = fmod((H - 180/360.0 + 1.0), 1.0);
+    H2 = fmod((H + 180/360.0 ), 1.0);
+    H3 = fmod((H + 270/360.0 ), 1.0);
     //entre 0 et 360
     //H1 = (int)(H * 360 + ecart) % 360;
     //H2 = (int)(H * 360 - ecart + 360) % 360;
 };
 
-void Complementaire(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte){
+void Complementaire(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte, double saturation){
     double complementaire=couleurComplementaire(teinte);
     Color outColor;
     OCTET *segmentation;
@@ -157,7 +160,7 @@ void Complementaire(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double tei
     std::vector<Color> tabK = get_dominant_colors(segmentation, ImgIn, 2, nH, nW);
     for (int i=0; i<nH*nW; i++){
         outColor.h = (segmentation[i*3]==tabK[0].r && segmentation[i*3+1]==tabK[0].g && segmentation[i*3+2]==tabK[0].b) ? teinte : complementaire;
-        outColor.s=ImgIn[i].s;
+        outColor.s=saturation;
         outColor.l=ImgIn[i].l;
         outColor.HSL_to_RGB();
 
@@ -167,7 +170,7 @@ void Complementaire(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double tei
     }
 }
 
-void Triadique(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte,int ecart){
+void Triadique(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte,int ecart, double saturation){
     double teinte2, teinte3;
     couleurTriadique(teinte,teinte2,teinte3,ecart);
     Color outColor;
@@ -185,7 +188,7 @@ void Triadique(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte,i
         else{
             outColor.h =teinte3;
         }
-        outColor.s=ImgIn[i].s;
+        outColor.s=saturation;
         outColor.l=ImgIn[i].l;
         outColor.HSL_to_RGB();
 
@@ -195,7 +198,7 @@ void Triadique(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte,i
     }
 }
 
-void Quadratique(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte){
+void Quadratique(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte,double saturation){
     Color outColor;
     OCTET *segmentation;
     allocation_tableau(segmentation, OCTET, nH  * nW * 3);
@@ -203,20 +206,25 @@ void Quadratique(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte
     //teinte=tabK[0].h;
     double teinte2, teinte3, teinte4;
     couleurQuadratique(teinte,teinte2,teinte3,teinte4);
+    //int u=0;int v=0;int g=0;int d=0;
     for (int i=0;i<nH*nW;i++){
         if(segmentation[i*3] == tabK[0].r &&segmentation[i*3+1] == tabK[0].g && segmentation[i*3+2] == tabK[0].b ){
             outColor.h =teinte;
+            //u++;
         }
         else if(segmentation[i*3] == tabK[1].r && segmentation[i*3+1] == tabK[1].g && segmentation[i*3+2] == tabK[1].b ){
             outColor.h =teinte2;
+            //v++;
         }
         else if(segmentation[i*3] == tabK[2].r && segmentation[i*3+1] == tabK[2].g && segmentation[i*3+2] == tabK[2].b ){
             outColor.h =teinte2;
+            //g++;
         }
         else{
             outColor.h =teinte4;
+            //d++;
         }
-        outColor.s=ImgIn[i].s;
+        outColor.s=saturation;
         outColor.l=ImgIn[i].l;
         outColor.HSL_to_RGB();
 
@@ -224,9 +232,11 @@ void Quadratique(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte
         ImgOut[i*3+1]= outColor.g;
         ImgOut[i*3+2]= outColor.b;
     }
+    //std::cout<<u<<" "<<v<<" "<<g<<" "<<d<<std::endl;
+    //std::cout<<teinte<<" "<<teinte2<<" "<<teinte3<<" "<<teinte4<<std::endl;
 }
 
-void Analogue(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte,int ecart){
+void Analogue(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte,int ecart, double saturation){
     Color outColor;
     OCTET *segmentation;
     allocation_tableau(segmentation, OCTET, nH  * nW * 3);
@@ -236,7 +246,7 @@ void Analogue(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte,in
         double dist = couleurDominante.h*360 - ImgIn[i].h*360 ;
         double couleur=dist > 0 ? teinte*360 + (sqrt(dist*dist)*2*ecart)/360 : teinte*360 - (sqrt(dist*dist)*2*ecart)/360;
         outColor.h =couleur<0? fmod(couleur /360.0 +1,1.0) : fmod(couleur /360.0 ,1.0) ;
-        outColor.s=ImgIn[i].s;
+        outColor.s=saturation;
         outColor.l=ImgIn[i].l;
         outColor.HSL_to_RGB();
 
@@ -246,4 +256,45 @@ void Analogue(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte,in
     }
 }
 
+void Complementaire_B(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte, double saturation){
+    double complementaire=couleurComplementaire(teinte);
+    std::cout<<teinte<<" "<<complementaire<<std::endl;
+    Color outColor;
+    for (int i=0; i<nH*nW; i++){
+        outColor.h = std::fabs(ImgIn[i].h-teinte)<0.25 ? teinte : complementaire;
+        outColor.s=saturation;
+        outColor.l=ImgIn[i].l;
+        outColor.HSL_to_RGB();
+
+        ImgOut[i*3]= outColor.r;
+        ImgOut[i*3+1]= outColor.g;
+        ImgOut[i*3+2]= outColor.b;
+    }
+}
+
+void Triadique_B(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte,int ecart, double saturation){
+    double teinte2, teinte3;
+    couleurTriadique(teinte,teinte2,teinte3,ecart);
+    Color outColor;
+
+
+    for (int i=0;i<nH*nW;i++){
+        if( std::fabs(ImgIn[i].h-teinte)<0.16){
+            outColor.h =teinte;
+        }
+        else if( std::fabs(ImgIn[i].h-teinte2)<0.16){
+            outColor.h =teinte2;
+        }
+        else{
+            outColor.h =teinte3;
+        }
+        outColor.s=saturation;
+        outColor.l=ImgIn[i].l;
+        outColor.HSL_to_RGB();
+
+        ImgOut[i*3]= outColor.r;
+        ImgOut[i*3+1]= outColor.g;
+        ImgOut[i*3+2]= outColor.b;
+    }
+}
 #endif
