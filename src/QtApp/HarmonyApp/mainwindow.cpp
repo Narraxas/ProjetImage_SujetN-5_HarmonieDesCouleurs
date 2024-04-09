@@ -18,6 +18,8 @@ QString originalFrameFilePath;
 QString modifiedFrameFilePath = "ImgOut.ppm";
 QString selectedHarmony;
 QColor color(255, 255, 255);
+bool isBlurred = false;
+bool isOpenedClosed = false;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -99,7 +101,7 @@ int writeComplementaire(double color, double saturation)
     std::vector<Color> ImgHSL;
     octetToColorVec(ImgIn, ImgHSL, nTaille3);
     std::cout << ImgHSL.size() << std::endl;
-    Complementaire(ImgOut, ImgHSL, nH, nW, color,saturation);
+    Complementaire(ImgOut, ImgHSL, nH, nW, color,saturation, isBlurred, isOpenedClosed);
 
     ecrire_image_ppm(cNomImgEcrite, ImgOut,  nH, nW);
     free(ImgIn);
@@ -305,5 +307,17 @@ void MainWindow::on_pushButton_2_clicked()
             label->show();
         }
     }
+}
+
+
+void MainWindow::on_isBlurred_stateChanged(int arg1)
+{
+    std::cout << "Blurred" << std::endl;
+}
+
+
+void MainWindow::on_isOpenedClosed_stateChanged(int arg1)
+{
+    std::cout << "OpenClose" << std::endl;
 }
 

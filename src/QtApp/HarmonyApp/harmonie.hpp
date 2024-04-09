@@ -97,6 +97,89 @@ void HSL_to_RGB(OCTET *ImgOutRGB,vector<double> ImgInHSL, int nH, int nW){
     }
 };
 
+void ero_dilat_nonBinary(OCTET *ImgIn, OCTET *ImgOut, int nH, int nW, bool color, bool whiteObject, bool erosion){
+
+    //Check si on est sur tu greyscale ou pas
+    int facteur = color ? 3 : 1;
+    int boucle = color ? 3 : 1;
+    //Boucle sur chaque pixel de l'image
+    for (int i = 0; i < nH; i++)
+    {
+        for (int j = 0; j < nW; j++)
+        {
+            for (int k = 0; k < boucle; k++)
+            {
+                int M;
+                if((whiteObject && erosion) || (!whiteObject && !erosion)){
+                    M = 255;
+                } else if((whiteObject && !erosion) || (!whiteObject && erosion)){
+                    M = 0;
+                }
+                //boucle sur tout le voisinage de i-1 j -1 a i+1 j+1 en skippant les bords de l'image
+                for (int y = max(i - 1, 0); y <= min(i + 1, nH - 1); y++)
+                {
+                    for (int x = max(j - 1, 0); x <= min(j + 1, nW - 1); x++)
+                    {
+                        if((whiteObject && erosion) || (!whiteObject && !erosion)){
+                            M = min(M, (int)ImgIn[facteur * (y * nW + x) + k]);
+                        } else if((whiteObject && !erosion) || (!whiteObject && erosion)){
+                            M = max(M, (int)ImgIn[facteur * (y * nW + x) + k]);
+                        }
+
+                    }
+                }
+                ImgOut[facteur * (i * nW + j) + k] = M;
+            }
+        }
+    }
+}
+
+// color : 0 = greyScale, 1 = RGB
+// whiteObject : 0 = black object, 1 = white object
+void erosion_nonBinary(OCTET *ImgIn, OCTET *ImgOut, int nH, int nW, bool color, bool whiteObject)
+{
+    ero_dilat_nonBinary(ImgIn, ImgOut, nH, nW, color, whiteObject, true);
+}
+
+// color : 0 = greyScale, 1 = RGB
+// whiteObject : 0 = black object, 1 = white object
+void dilation_nonBinary(OCTET *ImgIn, OCTET *ImgOut, int nH, int nW, bool color, bool whiteObject)
+{
+    ero_dilat_nonBinary(ImgIn, ImgOut, nH, nW, color, whiteObject, false);
+}
+
+// color : 0 = greyScale, 1 = RGB
+// whiteObject : 0 = black object, 1 = white object
+void closing_nonBinary(OCTET *ImgIn, OCTET *ImgOut, int nH, int nW, bool color, bool whiteObject)
+{
+    OCTET *ImgTemp;
+    allocation_tableau(ImgTemp, OCTET, nW * nH * (color ? 3 : 1));
+
+    dilation_nonBinary(ImgIn, ImgTemp, nH, nW, color, whiteObject);
+    erosion_nonBinary(ImgTemp, ImgOut, nH, nW, color, whiteObject);
+
+    free(ImgTemp);
+}
+
+// color : 0 = greyScale, 1 = RGB
+// whiteObject : 0 = black object, 1 = white object
+void opening_nonBinary(OCTET *ImgIn, OCTET *ImgOut, int nH, int nW, bool color, bool whiteObject)
+{
+    OCTET *ImgTemp;
+    allocation_tableau(ImgTemp, OCTET, nW * nH * (color ? 3 : 1));
+
+    erosion_nonBinary(ImgIn, ImgTemp, nH, nW, color, whiteObject);
+    dilation_nonBinary(ImgTemp, ImgOut, nH, nW, color, whiteObject);
+
+    free(ImgTemp);
+}
+
+void copyOctet(OCTET *ImgIn, OCTET *ImgCopy,int taille){
+    for(int i=0; i<taille ;i++){
+        ImgCopy[i]=ImgIn[i];
+    }
+}
+
 void monoChromatique(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW, double color, double saturation){
     Color outColor;
 
@@ -123,7 +206,112 @@ void vector_to_OCTETtab(vector<double> vec, OCTET *octet_tab){
 void octetToColorVec(OCTET *octetTab, vector<Color> &colorVec, int nTaille3) {
     for (int i = 0; i < nTaille3; i+=3)
         colorVec.push_back(Color(octetTab[i], octetTab[i + 1], octetTab[i + 2]));
+};
+
+void colorVecToOctet(OCTET *octetTab, vector<Color> &colorVec, int nTaille) {
+    for (int i = 0; i < nTaille; i++){
+        octetTab[i*3]=colorVec[i].r;
+        octetTab[i*3]=colorVec[i].g;
+        octetTab[i*3]=colorVec[i].b;
+    }
+
+};
+void flouGaussRGB(OCTET* ImgIn, OCTET *ImgOut, int nH, int nW) {
+    int hg_r, hh_r, hd_r, mg_r, md_r, bg_r, bm_r, bd_r;
+    int hg_g, hh_g, hd_g, mg_g, md_g, bg_g, bm_g, bd_g;
+    int hg_b, hh_b, hd_b, mg_b, md_b, bg_b, bm_b, bd_b;
+
+    for (int i = 0; i < nH; i++) {
+        for (int j = 0; j < nW; j++) {
+            if (i == 0 || i == nH - 1 || j == 0 || j == nW - 1) {
+                // Copy pixel values as is for border pixels
+                ImgOut[3 * (i * nW + j)] = ImgIn[3 * (i * nW + j)]; // Red channel
+                ImgOut[3 * (i * nW + j) + 1] = ImgIn[3 * (i * nW + j) + 1]; // Green channel
+                ImgOut[3 * (i * nW + j) + 2] = ImgIn[3 * (i * nW + j) + 2]; // Blue channel
+            } else {
+                // Red channel
+                hg_r = ImgIn[3 * ((i - 1) * nW + (j - 1))];
+                hh_r = ImgIn[3 * ((i - 1) * nW + j)];
+                hd_r = ImgIn[3 * ((i - 1) * nW + (j + 1))];
+                mg_r = ImgIn[3 * (i * nW + (j - 1))];
+                md_r = ImgIn[3 * (i * nW + (j + 1))];
+                bg_r = ImgIn[3 * ((i + 1) * nW + (j - 1))];
+                bm_r = ImgIn[3 * ((i + 1) * nW + j)];
+                bd_r = ImgIn[3 * ((i + 1) * nW + (j + 1))];
+                ImgOut[3 * (i * nW + j)] = (ImgIn[3 * (i * nW + j)] * 4 + hg_r + hh_r * 2 + hd_r + mg_r * 2 + md_r * 2 + bg_r + bm_r * 2 + bd_r) / 16;
+
+                // Green channel
+                hg_g = ImgIn[3 * ((i - 1) * nW + (j - 1)) + 1];
+                hh_g = ImgIn[3 * ((i - 1) * nW + j) + 1];
+                hd_g = ImgIn[3 * ((i - 1) * nW + (j + 1)) + 1];
+                mg_g = ImgIn[3 * (i * nW + (j - 1)) + 1];
+                md_g = ImgIn[3 * (i * nW + (j + 1)) + 1];
+                bg_g = ImgIn[3 * ((i + 1) * nW + (j - 1)) + 1];
+                bm_g = ImgIn[3 * ((i + 1) * nW + j) + 1];
+                bd_g = ImgIn[3 * ((i + 1) * nW + (j + 1)) + 1];
+                ImgOut[3 * (i * nW + j) + 1] = (ImgIn[3 * (i * nW + j) + 1] * 4 + hg_g + hh_g * 2 + hd_g + mg_g * 2 + md_g * 2 + bg_g + bm_g * 2 + bd_g) / 16;
+
+                // Blue channel
+                hg_b = ImgIn[3 * ((i - 1) * nW + (j - 1)) + 2];
+                hh_b = ImgIn[3 * ((i - 1) * nW + j) + 2];
+                hd_b = ImgIn[3 * ((i - 1) * nW + (j + 1)) + 2];
+                mg_b = ImgIn[3 * (i * nW + (j - 1)) + 2];
+                md_b = ImgIn[3 * (i * nW + (j + 1)) + 2];
+                bg_b = ImgIn[3 * ((i + 1) * nW + (j - 1)) + 2];
+                bm_b = ImgIn[3 * ((i + 1) * nW + j) + 2];
+                bd_b = ImgIn[3 * ((i + 1) * nW + (j + 1)) + 2];
+                ImgOut[3 * (i * nW + j) + 2] = (ImgIn[3 * (i * nW + j) + 2] * 4 + hg_b + hh_b * 2 + hd_b + mg_b * 2 + md_b * 2 + bg_b + bm_b * 2 + bd_b) / 16;
+            }
+        }
+    }
 }
+
+
+vector<Color> Traitement(vector<Color> ImgIn,int nH, int nW){
+    OCTET *pretraitementIN;
+    allocation_tableau(pretraitementIN, OCTET, nH * nW * 3);
+    OCTET *pretraitementOUT;
+    allocation_tableau(pretraitementOUT, OCTET, nH * nW * 3);
+    colorVecToOctet(pretraitementIN,ImgIn, nH * nW);
+    dilation_nonBinary(pretraitementIN,pretraitementOUT,nH,nW,1,0);
+        erosion_nonBinary(pretraitementOUT,pretraitementIN,nH,nW,1,0);
+    dilation_nonBinary(pretraitementIN,pretraitementOUT,nH,nW,1,0);
+        erosion_nonBinary(pretraitementOUT,pretraitementIN,nH,nW,1,0);
+    dilation_nonBinary(pretraitementIN,pretraitementOUT,nH,nW,1,0);
+        erosion_nonBinary(pretraitementOUT,pretraitementIN,nH,nW,1,0);
+    vector<Color> pretraitement;
+    octetToColorVec(pretraitementIN,pretraitement,nH*nW*3);
+
+    std::cout<< "pretraitement fini" <<std::endl;
+    return pretraitement;
+};
+
+vector<Color> TraitementFlou(vector<Color> ImgIn,int nH, int nW){
+    OCTET *pretraitementIN;
+    allocation_tableau(pretraitementIN, OCTET, nH * nW * 3);
+    OCTET *pretraitementOUT;
+    allocation_tableau(pretraitementOUT, OCTET, nH * nW * 3);
+    colorVecToOctet(pretraitementIN,ImgIn, nH * nW);
+    flouGaussRGB(pretraitementIN,pretraitementOUT,nH,nW);
+    flouGaussRGB(pretraitementOUT,pretraitementIN,nH,nW);
+    flouGaussRGB(pretraitementIN,pretraitementOUT,nH,nW);
+    flouGaussRGB(pretraitementOUT,pretraitementIN,nH,nW);
+    flouGaussRGB(pretraitementIN,pretraitementOUT,nH,nW);
+    flouGaussRGB(pretraitementOUT,pretraitementIN,nH,nW);
+    flouGaussRGB(pretraitementIN,pretraitementOUT,nH,nW);
+    flouGaussRGB(pretraitementOUT,pretraitementIN,nH,nW);
+    flouGaussRGB(pretraitementIN,pretraitementOUT,nH,nW);
+    flouGaussRGB(pretraitementOUT,pretraitementIN,nH,nW);
+    flouGaussRGB(pretraitementIN,pretraitementOUT,nH,nW);
+    flouGaussRGB(pretraitementOUT,pretraitementIN,nH,nW);
+    flouGaussRGB(pretraitementIN,pretraitementOUT,nH,nW);
+    flouGaussRGB(pretraitementOUT,pretraitementIN,nH,nW);
+    flouGaussRGB(pretraitementIN,pretraitementOUT,nH,nW);
+
+    vector<Color> pretraitement;
+    octetToColorVec(pretraitementOUT,pretraitement,nH*nW*3);
+    return pretraitement;
+};
 
 double couleurComplementaire(double H){
     return fmod((H + 0.5), 1.0);//entre 0 et 1
@@ -152,16 +340,19 @@ void couleurQuadratique(double H, double &H1, double &H2, double &H3){
     //H2 = (int)(H * 360 - ecart + 360) % 360;
 };
 
-void Complementaire(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte, double saturation){
+void Complementaire(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte, double saturation,bool flou, bool openclose){
     double complementaire=couleurComplementaire(teinte);
     Color outColor;
     OCTET *segmentation;
+    vector<Color> preTraitement=ImgIn;
+    if(openclose){preTraitement= Traitement(preTraitement,nH,nW);}
+    if(flou){preTraitement= TraitementFlou(preTraitement,nH,nW);}
     allocation_tableau(segmentation, OCTET, nH  * nW * 3);
-    std::vector<Color> tabK = get_dominant_colors(segmentation, ImgIn, 2, nH, nW);
+    std::vector<Color> tabK = get_dominant_colors(segmentation, preTraitement, 2, nH, nW);
     for (int i=0; i<nH*nW; i++){
         outColor.h = (segmentation[i*3]==tabK[0].r && segmentation[i*3+1]==tabK[0].g && segmentation[i*3+2]==tabK[0].b) ? teinte : complementaire;
         outColor.s=saturation;
-        outColor.l=ImgIn[i].l;
+        outColor.l=preTraitement[i].l;
         outColor.HSL_to_RGB();
 
         ImgOut[i*3]= outColor.r;
@@ -175,8 +366,10 @@ void Triadique(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte,i
     couleurTriadique(teinte,teinte2,teinte3,ecart);
     Color outColor;
     OCTET *segmentation;
+    vector<Color> preTraitement=ImgIn;
+    preTraitement= Traitement(preTraitement,nH,nW);
     allocation_tableau(segmentation, OCTET, nH  * nW * 3);
-    std::vector<Color> tabK = get_dominant_colors(segmentation, ImgIn, 3, nH, nW);
+    std::vector<Color> tabK = get_dominant_colors(segmentation, preTraitement, 3, nH, nW);
 
     for (int i=0;i<nH*nW;i++){
         if(segmentation[i*3] == tabK[0].r &&segmentation[i*3+1] == tabK[0].g && segmentation[i*3+2] == tabK[0].b ){
@@ -201,8 +394,10 @@ void Triadique(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte,i
 void Quadratique(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte,double saturation){
     Color outColor;
     OCTET *segmentation;
+    vector<Color> preTraitement=ImgIn;
+    preTraitement= Traitement(preTraitement,nH,nW);
     allocation_tableau(segmentation, OCTET, nH  * nW * 3);
-    std::vector<Color> tabK = get_dominant_colors(segmentation, ImgIn, 4, nH, nW);
+    std::vector<Color> tabK = get_dominant_colors(segmentation, preTraitement, 4, nH, nW);
     //teinte=tabK[0].h;
     double teinte2, teinte3, teinte4;
     couleurQuadratique(teinte,teinte2,teinte3,teinte4);
@@ -217,7 +412,7 @@ void Quadratique(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte
             //v++;
         }
         else if(segmentation[i*3] == tabK[2].r && segmentation[i*3+1] == tabK[2].g && segmentation[i*3+2] == tabK[2].b ){
-            outColor.h =teinte2;
+            outColor.h =teinte3;
             //g++;
         }
         else{
