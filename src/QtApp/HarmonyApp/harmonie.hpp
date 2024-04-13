@@ -306,34 +306,34 @@ void Complementaire_B(OCTET *ImgOut, std::vector<Color> ImgInHSL, int nH, int nW
     }
 }
 
-void Triadique_B(OCTET *ImgOut, std::vector<Color> ImgInHSL, int nH, int nW, double hue) {
+void Triadique_B(OCTET *ImgOut, std::vector<Color> ImgInHSL, int nH, int nW, double hue,double ecart) {
     double R, G, B, m;
-    double hue1, hue2, hue3;
-    couleurQuadratique(hue, hue1, hue2, hue3);
+        double hue1, hue2;
+        couleurTriadique(hue, hue1, hue2, ecart);
 
-    for (int i = 0; i < nH * nW; i++) {
-        double H = ImgInHSL[i].h;
-        double S = ImgInHSL[i].s;
-        double L = ImgInHSL[i].l;
+        for (int i = 0; i < nH * nW ; i ++) {
+            double H = ImgInHSL[i].h;
+            double S = ImgInHSL[i].s;
+            double L = ImgInHSL[i].l;
 
-        double newHue;
-        double distance1 = min(fabs(H - hue1), 1.0 - fabs(H - hue1));
-        double distance2 = min(fabs(H - hue2), 1.0 - fabs(H - hue2));
-        double distance3 = min(fabs(H - hue3), 1.0 - fabs(H - hue3));
+            double newHue;
+            double distance1= min(fabs(H - hue), 1.0 - fabs(H - hue));
+            double distance2 = min(fabs(H - hue1), 1.0 - fabs(H - hue1));
+            double distance3 = min(fabs(H - hue2), 1.0 - fabs(H - hue2));
 
-        if (distance1 < distance2 && distance1 < distance3) {
-            newHue = hue1;
-        } else if (distance2 < distance3) {
-            newHue = hue2;
-        } else {
-            newHue = hue3;
+            if ( distance1 < distance2 && distance1 < distance3) {
+                newHue = hue;
+            } else if ( distance2 < distance3) {
+                newHue = hue1;}
+            else {
+                newHue = hue2;
+            }
+
+            pixel_HSL_to_RGB(newHue, S, L, R, G, B, m);
+            ImgOut[i*3] = R + m > 1 ? 255 : (R + m) * 255.0;
+            ImgOut[i*3 + 1] = G + m > 1 ? 255 : (G + m) * 255.0;
+            ImgOut[i*3 + 2] = B + m > 1 ? 255 : (B + m) * 255.0;
         }
-
-        pixel_HSL_to_RGB(newHue, S, L, R, G, B, m);
-        ImgOut[i*3] = R + m > 1 ? 255 : (R + m) * 255.0;
-        ImgOut[i*3 + 1] = G + m > 1 ? 255 : (G + m) * 255.0;
-        ImgOut[i*3 + 2] = B + m > 1 ? 255 : (B + m) * 255.0;
-    }
 }
 
 void Quadratique_B(OCTET *ImgOut, std::vector<Color> ImgInHSL, int nH, int nW, double hue, double saturation) {
