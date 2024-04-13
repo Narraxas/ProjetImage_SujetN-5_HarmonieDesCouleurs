@@ -15,10 +15,12 @@
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QFrame>
+#include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QSlider>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QWidget>
 
@@ -36,6 +38,9 @@ public:
     QPushButton *pushButton_2;
     QCheckBox *isBlurred;
     QCheckBox *isOpenedClosed;
+    QSlider *intensiteFlou;
+    QLabel *valueIntensiteFlou;
+    QSlider *seuilDistance;
     QMenuBar *menubar;
     QMenu *menuHarmony_Application;
     QStatusBar *statusbar;
@@ -87,10 +92,22 @@ public:
         pushButton_2->setGeometry(QRect(20, 490, 331, 51));
         isBlurred = new QCheckBox(centralwidget);
         isBlurred->setObjectName(QString::fromUtf8("isBlurred"));
-        isBlurred->setGeometry(QRect(470, 430, 181, 23));
+        isBlurred->setGeometry(QRect(440, 420, 181, 23));
         isOpenedClosed = new QCheckBox(centralwidget);
         isOpenedClosed->setObjectName(QString::fromUtf8("isOpenedClosed"));
-        isOpenedClosed->setGeometry(QRect(470, 460, 181, 23));
+        isOpenedClosed->setGeometry(QRect(440, 460, 181, 23));
+        intensiteFlou = new QSlider(centralwidget);
+        intensiteFlou->setObjectName(QString::fromUtf8("intensiteFlou"));
+        intensiteFlou->setGeometry(QRect(440, 440, 160, 16));
+        intensiteFlou->setMinimumSize(QSize(160, 0));
+        intensiteFlou->setOrientation(Qt::Horizontal);
+        valueIntensiteFlou = new QLabel(centralwidget);
+        valueIntensiteFlou->setObjectName(QString::fromUtf8("valueIntensiteFlou"));
+        valueIntensiteFlou->setGeometry(QRect(610, 440, 101, 17));
+        seuilDistance = new QSlider(centralwidget);
+        seuilDistance->setObjectName(QString::fromUtf8("seuilDistance"));
+        seuilDistance->setGeometry(QRect(440, 500, 160, 16));
+        seuilDistance->setOrientation(Qt::Horizontal);
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
@@ -127,6 +144,7 @@ public:
         pushButton_2->setText(QCoreApplication::translate("MainWindow", "Generate the image", nullptr));
         isBlurred->setText(QCoreApplication::translate("MainWindow", "Flou Gaussien", nullptr));
         isOpenedClosed->setText(QCoreApplication::translate("MainWindow", "Ouverture/Fermeture", nullptr));
+        valueIntensiteFlou->setText(QCoreApplication::translate("MainWindow", "Valeur du flou", nullptr));
         menuHarmony_Application->setTitle(QCoreApplication::translate("MainWindow", "Harmony Application", nullptr));
     } // retranslateUi
 

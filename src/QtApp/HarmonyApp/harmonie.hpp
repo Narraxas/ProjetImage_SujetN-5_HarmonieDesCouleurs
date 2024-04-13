@@ -288,20 +288,24 @@ vector<Color> Traitement(vector<Color> ImgIn,int nH, int nW){
     return pretraitement;
 };
 
-vector<Color> TraitementFlou(vector<Color> ImgIn,int nH, int nW){
+vector<Color> TraitementFlou(vector<Color> ImgIn,int nH, int nW, int intensite_flou){
     std::cout << "preTRAITEMENT : FLOU "<< std::endl;
     OCTET *pretraitementIN;
     allocation_tableau(pretraitementIN, OCTET, nH * nW * 3);
     OCTET *pretraitementOUT;
     allocation_tableau(pretraitementOUT, OCTET, nH * nW * 3);
     colorVecToOctet(pretraitementIN,ImgIn, nH * nW);
-    flouGaussRGB(pretraitementIN,pretraitementOUT,nH,nW);
-    flouGaussRGB(pretraitementOUT,pretraitementIN,nH,nW);
-    flouGaussRGB(pretraitementIN,pretraitementOUT,nH,nW);
-
+    for(int i=0 ; i< intensite_flou; i++){
+        i%2==0 ? flouGaussRGB(pretraitementIN,pretraitementOUT,nH,nW) :
+            flouGaussRGB(pretraitementOUT,pretraitementIN,nH,nW);
+    }
 
     vector<Color> pretraitement;
-    octetToColorVec(pretraitementOUT,pretraitement,nH*nW*3);
+    if(intensite_flou%2==0){
+        octetToColorVec(pretraitementIN,pretraitement,nH*nW*3);
+    } else {
+        octetToColorVec(pretraitementOUT,pretraitement,nH*nW*3);
+    }
     free(pretraitementIN); free(pretraitementOUT);
     return pretraitement;
 };
@@ -333,13 +337,13 @@ void couleurQuadratique(double H, double &H1, double &H2, double &H3){
     //H2 = (int)(H * 360 - ecart + 360) % 360;
 };
 
-void Complementaire(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte, double saturation,bool flou, bool openclose){
+void Complementaire(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte, double saturation,bool flou, bool openclose,int intensite_flou){
     double complementaire=couleurComplementaire(teinte);
     Color outColor;
     OCTET *segmentation;
     vector<Color> preTraitement=ImgIn;
     if(openclose){preTraitement= Traitement(preTraitement,nH,nW);}
-    if(flou){preTraitement= TraitementFlou(preTraitement,nH,nW);}
+    if(flou){preTraitement= TraitementFlou(preTraitement,nH,nW, intensite_flou);}
     allocation_tableau(segmentation, OCTET, nH  * nW * 3);
     std::vector<Color> tabK = get_dominant_colors(segmentation, preTraitement, 2, nH, nW);
     for (int i=0; i<nH*nW; i++){
@@ -355,14 +359,14 @@ void Complementaire(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double tei
     free(segmentation);
 }
 
-void Triadique(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte,int ecart, double saturation,bool flou, bool openclose){
+void Triadique(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte,int ecart, double saturation,bool flou, bool openclose, int intensite_flou){
     double teinte2, teinte3;
     couleurTriadique(teinte,teinte2,teinte3,ecart);
     Color outColor;
     OCTET *segmentation;
     vector<Color> preTraitement=ImgIn;
     if(openclose){preTraitement= Traitement(preTraitement,nH,nW);}
-    if(flou){preTraitement= TraitementFlou(preTraitement,nH,nW);}
+    if(flou){preTraitement= TraitementFlou(preTraitement,nH,nW, intensite_flou);}
     allocation_tableau(segmentation, OCTET, nH  * nW * 3);
     std::vector<Color> tabK = get_dominant_colors(segmentation, preTraitement, 3, nH, nW);
 
@@ -387,12 +391,12 @@ void Triadique(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte,i
     free(segmentation);
 }
 
-void Quadratique(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte,double saturation,bool flou, bool openclose){
+void Quadratique(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte,double saturation,bool flou, bool openclose,int intensite_flou){
     Color outColor;
     OCTET *segmentation;
     vector<Color> preTraitement=ImgIn;
     if(openclose){preTraitement= Traitement(preTraitement,nH,nW);}
-    if(flou){preTraitement= TraitementFlou(preTraitement,nH,nW);}
+    if(flou){preTraitement= TraitementFlou(preTraitement,nH,nW, intensite_flou);}
     allocation_tableau(segmentation, OCTET, nH  * nW * 3);
     std::vector<Color> tabK = get_dominant_colors(segmentation, preTraitement, 4, nH, nW);
     //teinte=tabK[0].h;
@@ -429,12 +433,12 @@ void Quadratique(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte
     free(segmentation);
 }
 
-void Analogue(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte,int ecart, double saturation,bool flou, bool openclose){
+void Analogue(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte,int ecart, double saturation,bool flou, bool openclose,int intensite_flou){
     Color outColor;
     OCTET *segmentation;
     vector<Color> preTraitement=ImgIn;
     if(openclose){preTraitement= Traitement(preTraitement,nH,nW);}
-    if(flou){preTraitement= TraitementFlou(preTraitement,nH,nW);}
+    if(flou){preTraitement= TraitementFlou(preTraitement,nH,nW, intensite_flou);}
     allocation_tableau(segmentation, OCTET, nH  * nW * 3);
     std::vector<Color> tabK = get_dominant_colors(segmentation, preTraitement, 1, nH, nW);
     Color couleurDominante(tabK[0].r ,tabK[0].g ,tabK[0].b );
@@ -453,13 +457,13 @@ void Analogue(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte,in
     free(segmentation);
 }
 
-void Complementaire_B(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte, double saturation){
+void Complementaire_B(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte, double saturation, float seuil){
     double complementaire=couleurComplementaire(teinte);
     std::cout<<teinte<<" "<<complementaire<<std::endl;
     Color outColor;
     for (int i=0; i<nH*nW; i++){
-        outColor.h = std::fabs(ImgIn[i].h-teinte)<0.25 ? teinte : complementaire;
-        outColor.s=saturation;
+        outColor.h = std::fabs(ImgIn[i].h-teinte)<=seuil ? teinte : complementaire;
+        outColor.s=(saturation+ImgIn[i].s)/2;
         outColor.l=ImgIn[i].l;
         outColor.HSL_to_RGB();
 
@@ -469,23 +473,23 @@ void Complementaire_B(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double t
     }
 }
 
-void Triadique_B(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte,int ecart, double saturation){
+void Triadique_B(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte,int ecart, double saturation,  float seuil){
     double teinte2, teinte3;
     couleurTriadique(teinte,teinte2,teinte3,ecart);
     Color outColor;
 
 
     for (int i=0;i<nH*nW;i++){
-        if( std::fabs(ImgIn[i].h-teinte)<0.16){
-            outColor.h =teinte;
+        if( std::fabs(ImgIn[i].h-teinte3)<seuil && std::fabs(ImgIn[i].h-teinte3<std::fabs(ImgIn[i].h-teinte2))){
+            outColor.h =teinte3;
         }
-        else if( std::fabs(ImgIn[i].h-teinte2)<0.16){
+        else if( std::fabs(ImgIn[i].h-teinte2)<seuil){
             outColor.h =teinte2;
         }
         else{
-            outColor.h =teinte3;
+            outColor.h =teinte;
         }
-        outColor.s=saturation;
+        outColor.s=(saturation+ImgIn[i].s)/2;
         outColor.l=ImgIn[i].l;
         outColor.HSL_to_RGB();
 

@@ -30,6 +30,10 @@ private slots:
 
     void on_isOpenedClosed_stateChanged(int arg1);
 
+    void updateIntensiteFlou(int value);
+
+    void updateSeuilDistance(int value);
+
 
 private:
     Ui::MainWindow *ui;

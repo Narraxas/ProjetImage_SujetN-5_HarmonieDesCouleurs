@@ -20,12 +20,33 @@ QString selectedHarmony;
 QColor color(255, 255, 255);
 bool isBlurred = false;
 bool isOpenedClosed = false;
+unsigned int intensite_flou=1;
+float seuil_distance =0.25;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+
     ui->setupUi(this);
+
+    ui->intensiteFlou->setMinimum(1);
+    ui->intensiteFlou->setMaximum(10);
+    ui->intensiteFlou->setSingleStep(1);
+    ui->valueIntensiteFlou->setText(QString::number(intensite_flou));
+    connect(ui->intensiteFlou, SIGNAL(valueChanged(int)), this, SLOT(updateIntensiteFlou(int)));
+    ui->valueIntensiteFlou->setVisible(false);
+    ui->isBlurred->setVisible(false);
+    ui->isOpenedClosed->setVisible(false);
+    ui->intensiteFlou->setVisible(false);
+
+    ui->seuilDistance->setVisible(false);
+
+    ui->seuilDistance->setMinimum(0.0);
+    ui->seuilDistance->setMaximum(10.0);
+    ui->seuilDistance->setSingleStep(1);
+    connect(ui->seuilDistance, SIGNAL(valueChanged(int)), this, SLOT(updateSeuilDistance(int)));
+
 }
 
 MainWindow::~MainWindow()
@@ -101,7 +122,7 @@ int writeComplementaire(double color, double saturation)
     std::vector<Color> ImgHSL;
     octetToColorVec(ImgIn, ImgHSL, nTaille3);
     std::cout << ImgHSL.size() << std::endl;
-    Complementaire(ImgOut, ImgHSL, nH, nW, color,saturation, isBlurred, isOpenedClosed);
+    Complementaire(ImgOut, ImgHSL, nH, nW, color,saturation, isBlurred, isOpenedClosed, intensite_flou);
 
     ecrire_image_ppm(cNomImgEcrite, ImgOut,  nH, nW);
     free(ImgIn);
@@ -128,7 +149,7 @@ int writeComplementaire_B(double color, double saturation)
     std::vector<Color> ImgHSL;
     octetToColorVec(ImgIn, ImgHSL, nTaille3);
     std::cout << ImgHSL.size() << std::endl;
-    Complementaire_B(ImgOut, ImgHSL, nH, nW, color,saturation);
+    Complementaire_B(ImgOut, ImgHSL, nH, nW, color,saturation, seuil_distance);
 
     ecrire_image_ppm(cNomImgEcrite, ImgOut,  nH, nW);
     free(ImgIn);
@@ -157,7 +178,7 @@ int writeAnalogue(double color, double saturation)
     std::vector<Color> ImgHSL;
     octetToColorVec(ImgIn, ImgHSL, nTaille3);
     std::cout << ImgHSL.size() << std::endl;
-    Analogue(ImgOut, ImgHSL, nH, nW, color,ecart,saturation, isBlurred, isOpenedClosed);
+    Analogue(ImgOut, ImgHSL, nH, nW, color,ecart,saturation, isBlurred, isOpenedClosed, intensite_flou);
 
     ecrire_image_ppm(cNomImgEcrite, ImgOut,  nH, nW);
     free(ImgIn);
@@ -186,7 +207,7 @@ int writeTriadique(double color, double saturation)
     std::vector<Color> ImgHSL;
     octetToColorVec(ImgIn, ImgHSL, nTaille3);
     std::cout << ImgHSL.size() << std::endl;
-    Triadique(ImgOut, ImgHSL, nH, nW, color,ecart,saturation, isBlurred, isOpenedClosed);
+    Triadique(ImgOut, ImgHSL, nH, nW, color,ecart,saturation, isBlurred, isOpenedClosed, intensite_flou);
 
     ecrire_image_ppm(cNomImgEcrite, ImgOut,  nH, nW);
     free(ImgIn);
@@ -215,7 +236,7 @@ int writeTriadique_B(double color, double saturation)
     std::vector<Color> ImgHSL;
     octetToColorVec(ImgIn, ImgHSL, nTaille3);
     std::cout << ImgHSL.size() << std::endl;
-    Triadique_B(ImgOut, ImgHSL, nH, nW, color,ecart,saturation);
+    Triadique_B(ImgOut, ImgHSL, nH, nW, color,ecart,saturation,seuil_distance);
 
     ecrire_image_ppm(cNomImgEcrite, ImgOut,  nH, nW);
     free(ImgIn);
@@ -242,7 +263,7 @@ int writeQuadratique(double color, double saturation)
     std::vector<Color> ImgHSL;
     octetToColorVec(ImgIn, ImgHSL, nTaille3);
     std::cout << ImgHSL.size() << std::endl;
-    Quadratique(ImgOut, ImgHSL, nH, nW, color,saturation, isBlurred, isOpenedClosed);
+    Quadratique(ImgOut, ImgHSL, nH, nW, color,saturation, isBlurred, isOpenedClosed, intensite_flou);
 
     ecrire_image_ppm(cNomImgEcrite, ImgOut,  nH, nW);
     free(ImgIn);
@@ -252,6 +273,25 @@ int writeQuadratique(double color, double saturation)
 void MainWindow::on_harmonyComboBox_currentTextChanged(const QString &arg1)
 {
     selectedHarmony = arg1;
+    if (selectedHarmony == "Complémentaire" || selectedHarmony == "Triadique"
+        || selectedHarmony == "Quadratique" || selectedHarmony == "Analogue") { // Remplacez "Mode 1" et "Mode 2" par vos options de liste déroulante
+        // Affichez le slider et le bouton
+        ui->valueIntensiteFlou->setVisible(true);
+        ui->isBlurred->setVisible(true);
+        ui->isOpenedClosed->setVisible(true);
+        ui->intensiteFlou->setVisible(true);
+    } else {
+        // Cachez le slider et le bouton
+        ui->valueIntensiteFlou->setVisible(false);
+        ui->isBlurred->setVisible(false);
+        ui->isOpenedClosed->setVisible(false);
+        ui->intensiteFlou->setVisible(false);
+    }
+    if(selectedHarmony == "ComplémentaireB" || selectedHarmony == "TriadiqueB"){
+        ui->seuilDistance->setVisible(true);
+    } else {
+        ui->seuilDistance->setVisible(false);
+    }
 }
 
 void MainWindow::on_colorBtn_clicked()
@@ -323,3 +363,35 @@ void MainWindow::on_isOpenedClosed_stateChanged(int arg1)
     std::cout << "OpenClose " << isOpenedClosed << std::endl;
 }
 
+void MainWindow::updateIntensiteFlou(int value) {
+    intensite_flou = value;
+    ui->valueIntensiteFlou->setText(QString::number(value));
+    //std::cout << "nombre de floutage : " << intensite_flou << std::endl;
+}
+
+void MainWindow::updateSeuilDistance(int value) {
+    seuil_distance = value/10.0;
+    std::cout << "seuil distance: " << seuil_distance << std::endl;
+    if (selectedHarmony == "ComplémentaireB") {
+        writeComplementaire_B(color.hue()/360.0f, color.saturation()/255.0f);
+    }
+    if (selectedHarmony == "TriadiqueB") {
+        writeTriadique_B(color.hue()/360.0f, color.saturation()/255.0f);
+    }
+
+    if (ui->modifiedFrame) {
+        // Charger l'image
+        QPixmap modifiedImage(modifiedFrameFilePath);
+        if (!modifiedImage.isNull()) {
+            // Redimensionner l'image pour s'adapter à la taille de la frame
+            modifiedImage = modifiedImage.scaled(ui->modifiedFrame->size(), Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+
+            // Créer un QLabel et afficher l'modifiedImage dans la frame
+            QLabel *label = new QLabel(ui->modifiedFrame);
+            label->setPixmap(modifiedImage);
+            label->setScaledContents(true); // Redimensionner l'image pour s'adapter à la taille du QLabel
+            label->show();
+        }
+    }
+
+}
