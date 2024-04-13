@@ -44,3 +44,34 @@ int main(int argc, char* argv[])
   free(ImgIn);
   return 1;
 }
+
+int writeMono(String cNomImgLue, double color, double saturation, String cNomImgEcrite)
+{
+  int nH, nW, nTaille;
+  if (argc != 5)
+    {
+      printf("Usage: ImageIn.ppm couleur(entre 0. et 1) saturation ImageOutRGB.ppm \n");
+      exit (1) ;
+    }
+  OCTET *ImgIn, *ImgOut, *ImgOut2;
+
+  lire_nb_lignes_colonnes_image_ppm(cNomImgLue, &nH, &nW);
+  nTaille = nH * nW;
+
+  int nTaille3 = nTaille * 3;
+  allocation_tableau(ImgIn, OCTET, nTaille3);
+  lire_image_ppm(cNomImgLue, ImgIn, nH * nW);
+  allocation_tableau(ImgOut, OCTET, nTaille3);
+
+  allocation_tableau(ImgOut2, OCTET, nTaille3);
+
+  std::vector<Color> ImgHSL;
+  octetToColorVec(ImgIn, ImgHSL, nTaille3);
+  std::cout << ImgHSL.size() << std::endl;
+  monoChromatique(ImgOut, ImgHSL, nH, nW, color, saturation);
+
+  // ecrire_image_ppm(cNomImgEcrite, ImgOut2,  nH, nW);
+  ecrire_image_ppm(cNomImgEcrite2, ImgOut,  nH, nW);
+  free(ImgIn);
+  return 1;
+}

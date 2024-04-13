@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created by: Qt User Interface Compiler version 5.15.3
+** Created by: Qt User Interface Compiler version 5.9.7
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -12,15 +12,16 @@
 #include <QtCore/QVariant>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QFrame>
+#include <QtWidgets/QHeaderView>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QWidget>
-#include "qgscolorbutton.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -32,7 +33,8 @@ public:
     QFrame *originalFrame;
     QComboBox *harmonyComboBox;
     QFrame *modifiedFrame;
-    QgsColorButton *mColorButton;
+    QPushButton *colorBtn;
+    QPushButton *pushButton_2;
     QMenuBar *menubar;
     QMenu *menuHarmony_Application;
     QStatusBar *statusbar;
@@ -40,50 +42,48 @@ public:
     void setupUi(QMainWindow *MainWindow)
     {
         if (MainWindow->objectName().isEmpty())
-            MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
+            MainWindow->setObjectName(QStringLiteral("MainWindow"));
         MainWindow->resize(800, 600);
-        MainWindow->setStyleSheet(QString::fromUtf8("background-color: rgb(243, 238, 234);\n"
+        MainWindow->setStyleSheet(QLatin1String("background-color: rgb(243, 238, 234);\n"
 "border-top-color: rgb(182, 182, 182);"));
         centralwidget = new QWidget(MainWindow);
-        centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
+        centralwidget->setObjectName(QStringLiteral("centralwidget"));
         pushButton = new QPushButton(centralwidget);
-        pushButton->setObjectName(QString::fromUtf8("pushButton"));
+        pushButton->setObjectName(QStringLiteral("pushButton"));
         pushButton->setGeometry(QRect(20, 420, 151, 24));
-        pushButton->setStyleSheet(QString::fromUtf8("background-color: rgb(190, 183, 183);"));
+        pushButton->setStyleSheet(QStringLiteral("background-color: rgb(190, 183, 183);"));
         originalFrame = new QFrame(centralwidget);
-        originalFrame->setObjectName(QString::fromUtf8("originalFrame"));
+        originalFrame->setObjectName(QStringLiteral("originalFrame"));
         originalFrame->setGeometry(QRect(20, 20, 331, 391));
-        originalFrame->setStyleSheet(QString::fromUtf8("background-color: rgb(255, 255, 255);"));
+        originalFrame->setStyleSheet(QStringLiteral("background-color: rgb(255, 255, 255);"));
         originalFrame->setFrameShape(QFrame::StyledPanel);
         originalFrame->setFrameShadow(QFrame::Raised);
         harmonyComboBox = new QComboBox(centralwidget);
-        harmonyComboBox->addItem(QString());
-        harmonyComboBox->addItem(QString());
-        harmonyComboBox->addItem(QString());
-        harmonyComboBox->addItem(QString());
-        harmonyComboBox->addItem(QString());
-        harmonyComboBox->addItem(QString());
-        harmonyComboBox->setObjectName(QString::fromUtf8("harmonyComboBox"));
+        harmonyComboBox->setObjectName(QStringLiteral("harmonyComboBox"));
         harmonyComboBox->setGeometry(QRect(180, 420, 171, 24));
-        harmonyComboBox->setStyleSheet(QString::fromUtf8("background-color: rgb(190, 183, 183);"));
+        harmonyComboBox->setStyleSheet(QStringLiteral("background-color: rgb(190, 183, 183);"));
         modifiedFrame = new QFrame(centralwidget);
-        modifiedFrame->setObjectName(QString::fromUtf8("modifiedFrame"));
+        modifiedFrame->setObjectName(QStringLiteral("modifiedFrame"));
         modifiedFrame->setGeometry(QRect(440, 20, 331, 391));
-        modifiedFrame->setStyleSheet(QString::fromUtf8("background-color: rgb(255, 255, 255);"));
+        modifiedFrame->setStyleSheet(QStringLiteral("background-color: rgb(255, 255, 255);"));
         modifiedFrame->setFrameShape(QFrame::StyledPanel);
         modifiedFrame->setFrameShadow(QFrame::Raised);
-        mColorButton = new QgsColorButton(centralwidget);
-        mColorButton->setObjectName(QString::fromUtf8("mColorButton"));
-        mColorButton->setGeometry(QRect(20, 450, 151, 28));
+        colorBtn = new QPushButton(centralwidget);
+        colorBtn->setObjectName(QStringLiteral("colorBtn"));
+        colorBtn->setGeometry(QRect(180, 450, 171, 24));
+        colorBtn->setStyleSheet(QStringLiteral("background-color: rgb(190, 183, 183);"));
+        pushButton_2 = new QPushButton(centralwidget);
+        pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
+        pushButton_2->setGeometry(QRect(20, 490, 331, 51));
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
-        menubar->setObjectName(QString::fromUtf8("menubar"));
-        menubar->setGeometry(QRect(0, 0, 800, 24));
+        menubar->setObjectName(QStringLiteral("menubar"));
+        menubar->setGeometry(QRect(0, 0, 800, 22));
         menuHarmony_Application = new QMenu(menubar);
-        menuHarmony_Application->setObjectName(QString::fromUtf8("menuHarmony_Application"));
+        menuHarmony_Application->setObjectName(QStringLiteral("menuHarmony_Application"));
         MainWindow->setMenuBar(menubar);
         statusbar = new QStatusBar(MainWindow);
-        statusbar->setObjectName(QString::fromUtf8("statusbar"));
+        statusbar->setObjectName(QStringLiteral("statusbar"));
         MainWindow->setStatusBar(statusbar);
 
         menubar->addAction(menuHarmony_Application->menuAction());
@@ -95,16 +95,23 @@ public:
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-        MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
-        pushButton->setText(QCoreApplication::translate("MainWindow", "Open file", nullptr));
-        harmonyComboBox->setItemText(0, QCoreApplication::translate("MainWindow", "S\303\251lectionnez une harmonie", nullptr));
-        harmonyComboBox->setItemText(1, QCoreApplication::translate("MainWindow", "getDominantColors", nullptr));
-        harmonyComboBox->setItemText(2, QCoreApplication::translate("MainWindow", "Monochromatique", nullptr));
-        harmonyComboBox->setItemText(3, QCoreApplication::translate("MainWindow", "Compl\303\251mentaire", nullptr));
-        harmonyComboBox->setItemText(4, QCoreApplication::translate("MainWindow", "Triadique", nullptr));
-        harmonyComboBox->setItemText(5, QCoreApplication::translate("MainWindow", "Quadratique", nullptr));
-
-        menuHarmony_Application->setTitle(QCoreApplication::translate("MainWindow", "Harmony Application", nullptr));
+        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", Q_NULLPTR));
+        pushButton->setText(QApplication::translate("MainWindow", "Open file", Q_NULLPTR));
+        harmonyComboBox->clear();
+        harmonyComboBox->insertItems(0, QStringList()
+         << QApplication::translate("MainWindow", "S\303\251lectionnez une harmonie", Q_NULLPTR)
+         << QApplication::translate("MainWindow", "getDominantColors", Q_NULLPTR)
+         << QApplication::translate("MainWindow", "Monochromatique", Q_NULLPTR)
+         << QApplication::translate("MainWindow", "Compl\303\251mentaire", Q_NULLPTR)
+         << QApplication::translate("MainWindow", "Compl\303\251mentaireB", Q_NULLPTR)
+         << QApplication::translate("MainWindow", "Analogue", Q_NULLPTR)
+         << QApplication::translate("MainWindow", "Triadique", Q_NULLPTR)
+         << QApplication::translate("MainWindow", "TriadiqueB", Q_NULLPTR)
+         << QApplication::translate("MainWindow", "Quadratique", Q_NULLPTR)
+        );
+        colorBtn->setText(QApplication::translate("MainWindow", "Choose a color", Q_NULLPTR));
+        pushButton_2->setText(QApplication::translate("MainWindow", "Generate the image", Q_NULLPTR));
+        menuHarmony_Application->setTitle(QApplication::translate("MainWindow", "Harmony Application", Q_NULLPTR));
     } // retranslateUi
 
 };

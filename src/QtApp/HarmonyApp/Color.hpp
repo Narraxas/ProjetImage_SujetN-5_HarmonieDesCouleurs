@@ -1,7 +1,6 @@
 #ifndef COLOR_HPP__
 #define COLOR_HPP__
 
-#include <iostream>
 #include "image_ppm.h"
 
 class Color{

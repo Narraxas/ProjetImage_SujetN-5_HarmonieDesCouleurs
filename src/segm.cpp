@@ -6,28 +6,23 @@
 #include <cmath>
 #include <iostream>
 #include "harmonie.cpp"
-
-
-
-
-
+#include "segmentationKmean.cpp"
 
 
 int main(int argc, char* argv[])
 {
   char cNomImgLue[250], cNomImgEcrite[250],cNomImgEcriteMoy[250],cNomImgEcriteConv[250];
-  int nH, nW, nTaille, ecart;
+  int nH, nW, nTaille;
   double teinte;
-  if (argc != 5) 
+  if (argc != 4) 
      {
-       printf("Usage: ImageIn.ppm ImageOut.ppm teinte ecart\n"); 
+       printf("Usage: ImageIn.ppm ImageOut.ppm teinte \n"); 
        exit (1) ;
      }
    
    sscanf (argv[1],"%s",cNomImgLue) ;
    sscanf (argv[2],"%s",cNomImgEcrite);
    sscanf (argv[3],"%lf",&teinte);
-    sscanf (argv[4],"%d",&ecart);
 
    OCTET *ImgIn, *ImgOut,*ImgSegm;
    
@@ -39,11 +34,17 @@ int main(int argc, char* argv[])
    lire_image_ppm(cNomImgLue, ImgIn, nH * nW);
    allocation_tableau(ImgOut, OCTET, nTaille3);
 
+
+
   std::vector<Color> ImgHSL;
   octetToColorVec(ImgIn, ImgHSL, nTaille3);
-  Analogue(ImgOut, ImgHSL, nH, nW, teinte, ecart);
-
-   ecrire_image_ppm(cNomImgEcrite, ImgOut,  nH, nW);
+  std::vector<Color> tabK = get_dominant_colors(ImgOut, ImgHSL, 2, nH, nW);
+  ecrire_image_ppm((char *)"sgm2.ppm", ImgOut, nH, nW);
+  tabK = get_dominant_colors(ImgOut, ImgHSL, 3, nH, nW);
+  ecrire_image_ppm((char *)"sgm3.ppm", ImgOut, nH, nW);
+  tabK = get_dominant_colors(ImgOut, ImgHSL, 4, nH, nW);
+  ecrire_image_ppm((char *)"sgm4.ppm", ImgOut, nH, nW);
+   
    free(ImgIn);
    return 1;
 }

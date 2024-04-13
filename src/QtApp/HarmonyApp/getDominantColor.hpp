@@ -1,12 +1,7 @@
 #ifndef GET_DOMINANT_COLOR_H__
 #define GET_DOMINANT_COLOR_H__
 
-#include <iostream>
 #include <vector>
-#include <random>
-#include <cmath>
-#include <algorithm>
-#include <queue>
 #include "image_ppm.h"
 #include "k_mean.h"
 #include "Color.hpp"
@@ -39,7 +34,7 @@ vector<Color> get_dominant_colors(OCTET *ImgOut, vector<Color>& ImgIn, int numbe
         ImgOut[i+1] = classes[iClass].g;
         ImgOut[i+2] = classes[iClass].b;
     }
-    ecrire_image_ppm((char *)"out/Image_Kmean.ppm", ImgOut, nH, nW);
+    //ecrire_image_ppm((char *)"out/Image_Kmean.ppm", ImgOut, nH, nW);
     return classes;
 }
 
