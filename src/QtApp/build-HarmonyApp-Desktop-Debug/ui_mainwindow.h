@@ -87,14 +87,14 @@ public:
         pushButton_2->setGeometry(QRect(20, 490, 331, 51));
         isBlurred = new QCheckBox(centralwidget);
         isBlurred->setObjectName(QString::fromUtf8("isBlurred"));
-        isBlurred->setGeometry(QRect(440, 430, 211, 23));
+        isBlurred->setGeometry(QRect(470, 430, 181, 23));
         isOpenedClosed = new QCheckBox(centralwidget);
         isOpenedClosed->setObjectName(QString::fromUtf8("isOpenedClosed"));
-        isOpenedClosed->setGeometry(QRect(440, 460, 221, 23));
+        isOpenedClosed->setGeometry(QRect(470, 460, 181, 23));
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
-        menubar->setGeometry(QRect(0, 0, 800, 28));
+        menubar->setGeometry(QRect(0, 0, 800, 22));
         menuHarmony_Application = new QMenu(menubar);
         menuHarmony_Application->setObjectName(QString::fromUtf8("menuHarmony_Application"));
         MainWindow->setMenuBar(menubar);
@@ -126,7 +126,7 @@ public:
         colorBtn->setText(QCoreApplication::translate("MainWindow", "Choose a color", nullptr));
         pushButton_2->setText(QCoreApplication::translate("MainWindow", "Generate the image", nullptr));
         isBlurred->setText(QCoreApplication::translate("MainWindow", "Flou Gaussien", nullptr));
-        isOpenedClosed->setText(QCoreApplication::translate("MainWindow", "Ouverture / Fermeture", nullptr));
+        isOpenedClosed->setText(QCoreApplication::translate("MainWindow", "Ouverture/Fermeture", nullptr));
         menuHarmony_Application->setTitle(QCoreApplication::translate("MainWindow", "Harmony Application", nullptr));
     } // retranslateUi
 

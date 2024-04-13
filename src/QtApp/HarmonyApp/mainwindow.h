@@ -26,15 +26,10 @@ private slots:
 
     void on_pushButton_2_clicked();
 
-    void on_checkBox_stateChanged(int arg1);
-
-    void on_checkBoxOpenClose_stateChanged(int arg1);
-
-    void on_checkBoxBlur_stateChanged(int arg1);
-
     void on_isBlurred_stateChanged(int arg1);
 
     void on_isOpenedClosed_stateChanged(int arg1);
+
 
 private:
     Ui::MainWindow *ui;

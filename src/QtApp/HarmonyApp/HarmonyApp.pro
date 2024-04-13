@@ -19,8 +19,6 @@ HEADERS += \
 FORMS += \
     mainwindow.ui
 
-TRANSLATIONS += \
-    HarmonyApp_fr_FR.ts
 CONFIG += lrelease
 CONFIG += embed_translations
 

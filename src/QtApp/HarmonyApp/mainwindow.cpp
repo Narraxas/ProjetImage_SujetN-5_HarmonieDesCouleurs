@@ -157,7 +157,7 @@ int writeAnalogue(double color, double saturation)
     std::vector<Color> ImgHSL;
     octetToColorVec(ImgIn, ImgHSL, nTaille3);
     std::cout << ImgHSL.size() << std::endl;
-    Analogue(ImgOut, ImgHSL, nH, nW, color,ecart,saturation);
+    Analogue(ImgOut, ImgHSL, nH, nW, color,ecart,saturation, isBlurred, isOpenedClosed);
 
     ecrire_image_ppm(cNomImgEcrite, ImgOut,  nH, nW);
     free(ImgIn);
@@ -186,7 +186,7 @@ int writeTriadique(double color, double saturation)
     std::vector<Color> ImgHSL;
     octetToColorVec(ImgIn, ImgHSL, nTaille3);
     std::cout << ImgHSL.size() << std::endl;
-    Triadique(ImgOut, ImgHSL, nH, nW, color,ecart,saturation);
+    Triadique(ImgOut, ImgHSL, nH, nW, color,ecart,saturation, isBlurred, isOpenedClosed);
 
     ecrire_image_ppm(cNomImgEcrite, ImgOut,  nH, nW);
     free(ImgIn);
@@ -242,7 +242,7 @@ int writeQuadratique(double color, double saturation)
     std::vector<Color> ImgHSL;
     octetToColorVec(ImgIn, ImgHSL, nTaille3);
     std::cout << ImgHSL.size() << std::endl;
-    Quadratique(ImgOut, ImgHSL, nH, nW, color,saturation);
+    Quadratique(ImgOut, ImgHSL, nH, nW, color,saturation, isBlurred, isOpenedClosed);
 
     ecrire_image_ppm(cNomImgEcrite, ImgOut,  nH, nW);
     free(ImgIn);
@@ -312,12 +312,14 @@ void MainWindow::on_pushButton_2_clicked()
 
 void MainWindow::on_isBlurred_stateChanged(int arg1)
 {
-    std::cout << "Blurred" << std::endl;
+    isBlurred=!isBlurred;
+    std::cout << "Blurred " << isBlurred << std::endl;
 }
 
 
 void MainWindow::on_isOpenedClosed_stateChanged(int arg1)
 {
-    std::cout << "OpenClose" << std::endl;
+    isOpenedClosed=!isOpenedClosed;
+    std::cout << "OpenClose " << isOpenedClosed << std::endl;
 }
 

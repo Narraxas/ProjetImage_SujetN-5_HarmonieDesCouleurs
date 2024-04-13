@@ -162,9 +162,9 @@ border-top-color: rgb(182, 182, 182);</string>
    <widget class="QCheckBox" name="isBlurred">
     <property name="geometry">
      <rect>
-      <x>440</x>
+      <x>470</x>
       <y>430</y>
-      <width>211</width>
+      <width>181</width>
       <height>23</height>
      </rect>
     </property>
@@ -175,14 +175,14 @@ border-top-color: rgb(182, 182, 182);</string>
    <widget class="QCheckBox" name="isOpenedClosed">
     <property name="geometry">
      <rect>
-      <x>440</x>
+      <x>470</x>
       <y>460</y>
-      <width>221</width>
+      <width>181</width>
       <height>23</height>
      </rect>
     </property>
     <property name="text">
-     <string>Ouverture / Fermeture</string>
+     <string>Ouverture/Fermeture</string>
     </property>
    </widget>
   </widget>
@@ -192,7 +192,7 @@ border-top-color: rgb(182, 182, 182);</string>
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>28</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuHarmony_Application">
