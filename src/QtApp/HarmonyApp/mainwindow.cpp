@@ -213,7 +213,7 @@ int writeTriadique_B(double color, double saturation)
     std::vector<Color> ImgHSL;
     octetToColorVec(ImgIn, ImgHSL, nTaille3);
     std::cout << ImgHSL.size() << std::endl;
-    Triadique_B(ImgOut, ImgHSL, nH, nW, color);
+    Triadique_B(ImgOut, ImgHSL, nH, nW, color,ecart);
 
     ecrire_image_ppm(cNomImgEcrite, ImgOut,  nH, nW);
     free(ImgIn);
