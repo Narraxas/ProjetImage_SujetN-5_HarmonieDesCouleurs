@@ -257,8 +257,8 @@ void Analogue(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte,in
 }
 void Analogue_B(OCTET *ImgOut, std::vector<Color> ImgInHSL, int nH, int nW, double hue) {
     double hue1, hue2;
-    couleurTriadique(hue, hue1, hue2, 120); // Utiliser une harmonie triadique avec un écart de 120 degrés
-
+    hue1=fmod((hue*360)-30,360);
+    hue1=fmod((hue*360)+30,360);
     for (int i = 0; i < nH * nW ; i++) {
         double H = ImgInHSL[i].h;
         double S = ImgInHSL[i].s;
