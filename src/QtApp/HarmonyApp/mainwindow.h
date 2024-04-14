@@ -35,6 +35,8 @@ private slots:
     void updateSeuilDistance(int value);
 
 
+    void on_saveBtn_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

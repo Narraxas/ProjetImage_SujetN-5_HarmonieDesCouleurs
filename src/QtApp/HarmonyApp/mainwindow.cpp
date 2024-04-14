@@ -4,6 +4,7 @@
 #include <QtWidgets>
 #include <QProcess>
 #include <QColorDialog>
+#include <QFile>
 
 #include <iostream>
 #include <vector>
@@ -15,11 +16,13 @@
 #include "harmonie.hpp"
 
 QString originalFrameFilePath;
+QString saveFrameFilePath;
 QString modifiedFrameFilePath = "ImgOut.ppm";
 QString selectedHarmony;
 QColor color(255, 255, 255);
 bool isBlurred = false;
 bool isOpenedClosed = false;
+bool colorChoosed = false;
 unsigned int intensite_flou=1;
 float seuil_distance =0.25;
 
@@ -47,6 +50,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->seuilDistance->setSingleStep(1);
     connect(ui->seuilDistance, SIGNAL(valueChanged(int)), this, SLOT(updateSeuilDistance(int)));
 
+    ui->saveBtn->setVisible(false);
 }
 
 MainWindow::~MainWindow()
@@ -411,6 +415,7 @@ void MainWindow::on_harmonyComboBox_currentTextChanged(const QString &arg1)
 void MainWindow::on_colorBtn_clicked()
 {
     color = QColorDialog::getColor(color, this, "Choose a color");
+    colorChoosed = true;
     // std::cout << (int)color.hue() << std::endl;
 
     // Print the hue value
@@ -420,57 +425,68 @@ void MainWindow::on_colorBtn_clicked()
 
 void MainWindow::on_pushButton_2_clicked()
 {
-    ///harmonie segmentation kmean
-    if (selectedHarmony == "Monochromatique") {
-        writeMonochromatique(color.hue()/360.0f, color.saturation()/255.0f);
-    }
-    if (selectedHarmony == "Complémentaire") {
-        writeComplementaire(color.hue()/360.0f, color.saturation()/255.0f);
-    }
-    if (selectedHarmony == "Triadique") {
-        writeTriadique(color.hue()/360.0f, color.saturation()/255.0f);
-    }
-    if (selectedHarmony == "Quadratique") {
-        writeQuadratique(color.hue()/360.0f, color.saturation()/255.0f);
-    }
-    if (selectedHarmony == "Analogue") {
-        writeAnalogue(color.hue()/360.0f, color.saturation()/255.0f);
-    }
-    //////test
-    if (selectedHarmony == "TriadiqueB") {
-        writeTriadique_B(color.hue()/360.0f, color.saturation()/255.0f);
-    }
-    if (selectedHarmony == "ComplémentaireB") {
-        writeComplementaire_B(color.hue()/360.0f, color.saturation()/255.0f);
-    }
-    //////harmonie par distance
-    if (selectedHarmony == "Complémentaire par distance") {
-        writeComplementaire_dist(color.hue()/360.0f, color.saturation()/255.0f);
-    }
-    if (selectedHarmony == "Triadique par distance") {
-        writeTriadique_dist(color.hue()/360.0f, color.saturation()/255.0f);
-    }
-    if (selectedHarmony == "Quadratique par distance") {
-        writeQuadratique_dist(color.hue()/360.0f, color.saturation()/255.0f);
-    }
-    if (selectedHarmony == "Analogue par distance") {
-        writeAnalogue_dist(color.hue()/360.0f, color.saturation()/255.0f);
-    }
+    if (!originalFrameFilePath.isEmpty()) {
+        if (selectedHarmony != "Sélectionnez une harmonie" && !selectedHarmony.isEmpty()) {
+            if (colorChoosed) {
+                //harmonie segmentation kmean
+                if (selectedHarmony == "Monochromatique") {
+                    writeMonochromatique(color.hue()/360.0f, color.saturation()/255.0f);
+                }
+                if (selectedHarmony == "Complémentaire") {
+                    writeComplementaire(color.hue()/360.0f, color.saturation()/255.0f);
+                }
+                if (selectedHarmony == "Triadique") {
+                    writeTriadique(color.hue()/360.0f, color.saturation()/255.0f);
+                }
+                if (selectedHarmony == "Quadratique") {
+                    writeQuadratique(color.hue()/360.0f, color.saturation()/255.0f);
+                }
+                if (selectedHarmony == "Analogue") {
+                    writeAnalogue(color.hue()/360.0f, color.saturation()/255.0f);
+                }
+                //////test
+                if (selectedHarmony == "TriadiqueB") {
+                    writeTriadique_B(color.hue()/360.0f, color.saturation()/255.0f);
+                }
+                if (selectedHarmony == "ComplémentaireB") {
+                    writeComplementaire_B(color.hue()/360.0f, color.saturation()/255.0f);
+                }
+                //////harmonie par distance
+                if (selectedHarmony == "Complémentaire par distance") {
+                    writeComplementaire_dist(color.hue()/360.0f, color.saturation()/255.0f);
+                }
+                if (selectedHarmony == "Triadique par distance") {
+                    writeTriadique_dist(color.hue()/360.0f, color.saturation()/255.0f);
+                }
+                if (selectedHarmony == "Quadratique par distance") {
+                    writeQuadratique_dist(color.hue()/360.0f, color.saturation()/255.0f);
+                }
+                if (selectedHarmony == "Analogue par distance") {
+                    writeAnalogue_dist(color.hue()/360.0f, color.saturation()/255.0f);
+                }
 
-    if (ui->modifiedFrame) {
-        // Charger l'image
-        QPixmap modifiedImage(modifiedFrameFilePath);
-        if (!modifiedImage.isNull()) {
-            // Redimensionner l'image pour s'adapter à la taille de la frame
-            modifiedImage = modifiedImage.scaled(ui->modifiedFrame->size(), Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+                if (ui->modifiedFrame) {
+                    // Charger l'image
+                    QPixmap modifiedImage(modifiedFrameFilePath);
+                    if (!modifiedImage.isNull()) {
+                        // Redimensionner l'image pour s'adapter à la taille de la frame
+                        modifiedImage = modifiedImage.scaled(ui->modifiedFrame->size(), Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
 
-            // Créer un QLabel et afficher l'modifiedImage dans la frame
-            QLabel *label = new QLabel(ui->modifiedFrame);
-            label->setPixmap(modifiedImage);
-            label->setScaledContents(true); // Redimensionner l'image pour s'adapter à la taille du QLabel
-            label->show();
-        }
-    }
+                        // Créer un QLabel et afficher l'modifiedImage dans la frame
+                        QLabel *label = new QLabel(ui->modifiedFrame);
+                        label->setPixmap(modifiedImage);
+                        label->setScaledContents(true); // Redimensionner l'image pour s'adapter à la taille du QLabel
+                        label->show();
+                    }
+                }
+
+                ui->saveBtn->setVisible(true);
+            } else
+                QMessageBox::critical(this, "Erreur", "You must choose a color first", QMessageBox::Ok);
+        } else
+            QMessageBox::critical(this, "Erreur", "You must choose an harmony first", QMessageBox::Ok);
+    } else
+        QMessageBox::critical(this, "Erreur", "You must load a file first.", QMessageBox::Ok);
 }
 
 
@@ -518,4 +534,21 @@ void MainWindow::updateSeuilDistance(int value) {
         }
     }
 
+}
+
+
+
+void MainWindow::on_saveBtn_clicked()
+{
+    QFile sourceFile(modifiedFrameFilePath);
+    QString saveFrameFilePath = QFileDialog::getSaveFileName(this, "Select Folder to save the output Image", "../../../out", "Fichiers (*.ppm)");
+    if (!saveFrameFilePath.isEmpty()) {
+        if (sourceFile.copy(saveFrameFilePath)) {
+            qDebug() << "File copied successfully to" << saveFrameFilePath;
+        } else {
+            qDebug() << "Failed to copy file";
+        }
+    } else {
+        qDebug() << "Annulation de la sauvegarde du fichier.";
+    }
 }
