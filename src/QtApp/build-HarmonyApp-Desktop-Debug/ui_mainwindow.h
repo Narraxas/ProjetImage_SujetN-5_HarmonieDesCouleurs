@@ -74,6 +74,10 @@ public:
         harmonyComboBox->addItem(QString());
         harmonyComboBox->addItem(QString());
         harmonyComboBox->addItem(QString());
+        harmonyComboBox->addItem(QString());
+        harmonyComboBox->addItem(QString());
+        harmonyComboBox->addItem(QString());
+        harmonyComboBox->addItem(QString());
         harmonyComboBox->setObjectName(QString::fromUtf8("harmonyComboBox"));
         harmonyComboBox->setGeometry(QRect(180, 420, 171, 24));
         harmonyComboBox->setStyleSheet(QString::fromUtf8("background-color: rgb(190, 183, 183);"));
@@ -133,12 +137,16 @@ public:
         harmonyComboBox->setItemText(0, QCoreApplication::translate("MainWindow", "S\303\251lectionnez une harmonie", nullptr));
         harmonyComboBox->setItemText(1, QCoreApplication::translate("MainWindow", "getDominantColors", nullptr));
         harmonyComboBox->setItemText(2, QCoreApplication::translate("MainWindow", "Monochromatique", nullptr));
-        harmonyComboBox->setItemText(3, QCoreApplication::translate("MainWindow", "Compl\303\251mentaire", nullptr));
-        harmonyComboBox->setItemText(4, QCoreApplication::translate("MainWindow", "Compl\303\251mentaireB", nullptr));
-        harmonyComboBox->setItemText(5, QCoreApplication::translate("MainWindow", "Analogue", nullptr));
-        harmonyComboBox->setItemText(6, QCoreApplication::translate("MainWindow", "Triadique", nullptr));
-        harmonyComboBox->setItemText(7, QCoreApplication::translate("MainWindow", "TriadiqueB", nullptr));
-        harmonyComboBox->setItemText(8, QCoreApplication::translate("MainWindow", "Quadratique", nullptr));
+        harmonyComboBox->setItemText(3, QCoreApplication::translate("MainWindow", "Analogue", nullptr));
+        harmonyComboBox->setItemText(4, QCoreApplication::translate("MainWindow", "Compl\303\251mentaire", nullptr));
+        harmonyComboBox->setItemText(5, QCoreApplication::translate("MainWindow", "Triadique", nullptr));
+        harmonyComboBox->setItemText(6, QCoreApplication::translate("MainWindow", "Quadratique", nullptr));
+        harmonyComboBox->setItemText(7, QCoreApplication::translate("MainWindow", "Compl\303\251mentaireB", nullptr));
+        harmonyComboBox->setItemText(8, QCoreApplication::translate("MainWindow", "TriadiqueB", nullptr));
+        harmonyComboBox->setItemText(9, QCoreApplication::translate("MainWindow", "Analogue par distance", nullptr));
+        harmonyComboBox->setItemText(10, QCoreApplication::translate("MainWindow", "Compl\303\251mentaire par distance", nullptr));
+        harmonyComboBox->setItemText(11, QCoreApplication::translate("MainWindow", "Triadique par distance", nullptr));
+        harmonyComboBox->setItemText(12, QCoreApplication::translate("MainWindow", "Quadratique par distance", nullptr));
 
         colorBtn->setText(QCoreApplication::translate("MainWindow", "Choose a color", nullptr));
         pushButton_2->setText(QCoreApplication::translate("MainWindow", "Generate the image", nullptr));

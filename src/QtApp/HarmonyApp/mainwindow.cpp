@@ -270,6 +270,120 @@ int writeQuadratique(double color, double saturation)
     return 1;
 }
 
+//////////////////////////HARMONIE PAR DISTANCE//////////////////////
+
+int writeComplementaire_dist(double color, double saturation)
+{
+    int nH, nW, nTaille;
+    OCTET *ImgIn, *ImgOut;
+    char cNomImgLue[originalFrameFilePath.length() + 1];
+    strcpy(cNomImgLue, originalFrameFilePath.toUtf8().constData());
+    char cNomImgEcrite[modifiedFrameFilePath.length() + 1];
+    strcpy(cNomImgEcrite, modifiedFrameFilePath.toUtf8().constData());
+
+    lire_nb_lignes_colonnes_image_ppm(cNomImgLue, &nH, &nW);
+    nTaille = nH * nW;
+
+    int nTaille3 = nTaille * 3;
+    allocation_tableau(ImgIn, OCTET, nTaille3);
+    lire_image_ppm(cNomImgLue, ImgIn, nH * nW);
+    allocation_tableau(ImgOut, OCTET, nTaille3);
+
+    std::vector<Color> ImgHSL;
+    octetToColorVec(ImgIn, ImgHSL, nTaille3);
+    std::cout << ImgHSL.size() << std::endl;
+    Complementaire_dist(ImgOut, ImgHSL, nH, nW, color, saturation);
+
+    ecrire_image_ppm(cNomImgEcrite, ImgOut,  nH, nW);
+    free(ImgIn);
+    return 1;
+}
+
+int writeTriadique_dist(double color, double saturation)
+{
+    int nH, nW, nTaille;
+    OCTET *ImgIn, *ImgOut;
+    char cNomImgLue[originalFrameFilePath.length() + 1];
+    strcpy(cNomImgLue, originalFrameFilePath.toUtf8().constData());
+    char cNomImgEcrite[modifiedFrameFilePath.length() + 1];
+    strcpy(cNomImgEcrite, modifiedFrameFilePath.toUtf8().constData());
+
+    lire_nb_lignes_colonnes_image_ppm(cNomImgLue, &nH, &nW);
+    nTaille = nH * nW;
+
+    int nTaille3 = nTaille * 3;
+    allocation_tableau(ImgIn, OCTET, nTaille3);
+    lire_image_ppm(cNomImgLue, ImgIn, nH * nW);
+    allocation_tableau(ImgOut, OCTET, nTaille3);
+
+    int ecart=120;
+
+    std::vector<Color> ImgHSL;
+    octetToColorVec(ImgIn, ImgHSL, nTaille3);
+    std::cout << ImgHSL.size() << std::endl;
+    Triadique_dist(ImgOut, ImgHSL, nH, nW, color, saturation ,ecart);
+
+    ecrire_image_ppm(cNomImgEcrite, ImgOut,  nH, nW);
+    free(ImgIn);
+    return 1;
+}
+
+int writeQuadratique_dist(double color, double saturation)
+{
+    int nH, nW, nTaille;
+    OCTET *ImgIn, *ImgOut;
+    char cNomImgLue[originalFrameFilePath.length() + 1];
+    strcpy(cNomImgLue, originalFrameFilePath.toUtf8().constData());
+    char cNomImgEcrite[modifiedFrameFilePath.length() + 1];
+    strcpy(cNomImgEcrite, modifiedFrameFilePath.toUtf8().constData());
+
+    lire_nb_lignes_colonnes_image_ppm(cNomImgLue, &nH, &nW);
+    nTaille = nH * nW;
+
+    int nTaille3 = nTaille * 3;
+    allocation_tableau(ImgIn, OCTET, nTaille3);
+    lire_image_ppm(cNomImgLue, ImgIn, nH * nW);
+    allocation_tableau(ImgOut, OCTET, nTaille3);
+
+    std::vector<Color> ImgHSL;
+    octetToColorVec(ImgIn, ImgHSL, nTaille3);
+    std::cout << ImgHSL.size() << std::endl;
+    Quadratique_dist(ImgOut, ImgHSL, nH, nW, color,saturation);
+
+    ecrire_image_ppm(cNomImgEcrite, ImgOut,  nH, nW);
+    free(ImgIn);
+    return 1;
+}
+
+int writeAnalogue_dist(double color,double saturation){
+    int nH, nW, nTaille;
+    OCTET *ImgIn, *ImgOut;
+    char cNomImgLue[originalFrameFilePath.length() + 1];
+    strcpy(cNomImgLue, originalFrameFilePath.toUtf8().constData());
+    char cNomImgEcrite[modifiedFrameFilePath.length() + 1];
+    strcpy(cNomImgEcrite, modifiedFrameFilePath.toUtf8().constData());
+
+    lire_nb_lignes_colonnes_image_ppm(cNomImgLue, &nH, &nW);
+    nTaille = nH * nW;
+
+    int nTaille3 = nTaille * 3;
+    allocation_tableau(ImgIn, OCTET, nTaille3);
+    lire_image_ppm(cNomImgLue, ImgIn, nH * nW);
+    allocation_tableau(ImgOut, OCTET, nTaille3);
+
+    int ecart=90;//A MODIFIER
+
+    std::vector<Color> ImgHSL;
+    octetToColorVec(ImgIn, ImgHSL, nTaille3);
+    std::cout << ImgHSL.size() << std::endl;
+    Analogue_dist(ImgOut, ImgHSL, nH, nW, color, saturation);
+
+    ecrire_image_ppm(cNomImgEcrite, ImgOut,  nH, nW);
+    free(ImgIn);
+    return 1;
+}
+
+////////////////////////////////////////////////////////////////////
 void MainWindow::on_harmonyComboBox_currentTextChanged(const QString &arg1)
 {
     selectedHarmony = arg1;
@@ -306,31 +420,41 @@ void MainWindow::on_colorBtn_clicked()
 
 void MainWindow::on_pushButton_2_clicked()
 {
+    ///harmonie segmentation kmean
     if (selectedHarmony == "Monochromatique") {
         writeMonochromatique(color.hue()/360.0f, color.saturation()/255.0f);
     }
-
     if (selectedHarmony == "Complémentaire") {
         writeComplementaire(color.hue()/360.0f, color.saturation()/255.0f);
     }
-
-    if (selectedHarmony == "ComplémentaireB") {
-        writeComplementaire_B(color.hue()/360.0f, color.saturation()/255.0f);
-    }
-
     if (selectedHarmony == "Triadique") {
         writeTriadique(color.hue()/360.0f, color.saturation()/255.0f);
     }
-
-    if (selectedHarmony == "TriadiqueB") {
-        writeTriadique_B(color.hue()/360.0f, color.saturation()/255.0f);
-    }
-
     if (selectedHarmony == "Quadratique") {
         writeQuadratique(color.hue()/360.0f, color.saturation()/255.0f);
     }
     if (selectedHarmony == "Analogue") {
         writeAnalogue(color.hue()/360.0f, color.saturation()/255.0f);
+    }
+    //////test
+    if (selectedHarmony == "TriadiqueB") {
+        writeTriadique_B(color.hue()/360.0f, color.saturation()/255.0f);
+    }
+    if (selectedHarmony == "ComplémentaireB") {
+        writeComplementaire_B(color.hue()/360.0f, color.saturation()/255.0f);
+    }
+    //////harmonie par distance
+    if (selectedHarmony == "Complémentaire par distance") {
+        writeComplementaire_dist(color.hue()/360.0f, color.saturation()/255.0f);
+    }
+    if (selectedHarmony == "Triadique par distance") {
+        writeTriadique_dist(color.hue()/360.0f, color.saturation()/255.0f);
+    }
+    if (selectedHarmony == "Quadratique par distance") {
+        writeQuadratique_dist(color.hue()/360.0f, color.saturation()/255.0f);
+    }
+    if (selectedHarmony == "Analogue par distance") {
+        writeAnalogue_dist(color.hue()/360.0f, color.saturation()/255.0f);
     }
 
     if (ui->modifiedFrame) {

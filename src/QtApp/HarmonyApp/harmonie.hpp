@@ -498,4 +498,162 @@ void Triadique_B(OCTET *ImgOut,vector<Color> ImgIn, int nH, int nW,double teinte
         ImgOut[i*3+2]= outColor.b;
     }
 }
+
+////////////////////////////////////////HARMONIE PAR DISTANCE /////////////
+void Analogue_dist(OCTET *ImgOut, std::vector<Color> ImgInHSL, int nH, int nW, double hue, double saturation) {
+    double hue1, hue2;
+    Color outColor;
+    couleurTriadique(hue, hue1, hue2, 120); // Utiliser une harmonie triadique avec un écart de 120 degrés
+
+    for (int i = 0; i < nH * nW ; i++) {
+        double H = ImgInHSL[i].h;
+        //double S = ImgInHSL[i].s;
+        //double L = ImgInHSL[i].l;
+
+        //double newHue;
+        double distance1 = min(fabs(H - hue1), 1.0 - fabs(H - hue1));
+        double distance2 = min(fabs(H - hue2), 1.0 - fabs(H - hue2));
+
+        if (distance1 < distance2) {
+            //newHue = hue1;
+            outColor.h = hue1;
+        } else {
+            //newHue = hue2;
+            outColor.h = hue2;
+        }
+
+        /*double R, G, B, m;
+        pixel_HSL_to_RGB(newHue, S, L, R, G, B, m);
+        ImgOut[i*3] = R + m > 1 ? 255 : (R + m) * 255.0;
+        ImgOut[i*3 + 1] = G + m > 1 ? 255 : (G + m) * 255.0;
+        ImgOut[i*3 + 2] = B + m > 1 ? 255 : (B + m) * 255.0;*/
+
+        outColor.s=(saturation+ImgInHSL[i].s)/2;
+        outColor.l=ImgInHSL[i].l;
+        outColor.HSL_to_RGB();
+
+        ImgOut[i*3]= outColor.r;
+        ImgOut[i*3+1]= outColor.g;
+        ImgOut[i*3+2]= outColor.b;
+    }
+}
+void Complementaire_dist(OCTET *ImgOut, std::vector<Color> ImgInHSL, int nH, int nW, double main_hue, double saturation) {
+    double complementaire1 = couleurComplementaire(main_hue);
+    Color outColor;
+    //double R, G, B, m;
+
+    for (int i = 0; i < nH * nW; i++) {
+        double H = ImgInHSL[i].h;
+        //double S = ImgInHSL[i].s;
+        //double L = ImgInHSL[i].l;
+
+        // Calculer la couleur complémentaire la plus proche
+        double distance1 = min(fabs(H - main_hue), 1.0 - fabs(H - main_hue));
+        double distance2 = min(fabs(H - complementaire1), 1.0 - fabs(H - complementaire1));
+
+        if (distance1 < distance2) {
+            //pixel_HSL_to_RGB(main_hue, S, L, R, G, B, m);
+            outColor.h=main_hue;
+        } else{
+            //pixel_HSL_to_RGB(complementaire1, S, L, R, G, B, m);
+            outColor.h=complementaire1;
+        }
+
+        /*ImgOut[i*3] = R + m > 1 ? 255 : (R + m) * 255.0;
+        ImgOut[i*3 + 1] = G + m > 1 ? 255 : (G + m) * 255.0;
+        ImgOut[i*3 + 2] = B + m > 1 ? 255 : (B + m) * 255.0;*/
+        outColor.s=(saturation+ImgInHSL[i].s)/2;
+        outColor.l=ImgInHSL[i].l;
+        outColor.HSL_to_RGB();
+
+        ImgOut[i*3]= outColor.r;
+        ImgOut[i*3+1]= outColor.g;
+        ImgOut[i*3+2]= outColor.b;
+    }
+}
+
+void Triadique_dist(OCTET *ImgOut, std::vector<Color> ImgInHSL, int nH, int nW, double hue,double saturation,double ecart) {
+//    double R, G, B, m;
+    double hue1, hue2;
+    couleurTriadique(hue, hue1, hue2, ecart);
+    Color outColor;
+    for (int i = 0; i < nH * nW ; i ++) {
+        double H = ImgInHSL[i].h;
+        //double S = ImgInHSL[i].s;
+        //double L = ImgInHSL[i].l;
+
+//        double newHue;
+        double distance1= min(fabs(H - hue), 1.0 - fabs(H - hue));
+        double distance2 = min(fabs(H - hue1), 1.0 - fabs(H - hue1));
+        double distance3 = min(fabs(H - hue2), 1.0 - fabs(H - hue2));
+
+        if ( distance1 < distance2 && distance1 < distance3) {
+            //newHue = hue;
+            outColor.h= hue;
+        } else if ( distance2 < distance3) {
+            //newHue = hue1;
+            outColor.h= hue1;
+        }
+        else {
+            //newHue = hue2;
+            outColor.h= hue2;
+        }
+
+        /*pixel_HSL_to_RGB(newHue, S, L, R, G, B, m);
+        ImgOut[i*3] = R + m > 1 ? 255 : (R + m) * 255.0;
+        ImgOut[i*3 + 1] = G + m > 1 ? 255 : (G + m) * 255.0;
+        ImgOut[i*3 + 2] = B + m > 1 ? 255 : (B + m) * 255.0;*/
+        outColor.s=(saturation+ImgInHSL[i].s)/2;
+        outColor.l=ImgInHSL[i].l;
+        outColor.HSL_to_RGB();
+
+        ImgOut[i*3]= outColor.r;
+        ImgOut[i*3+1]= outColor.g;
+        ImgOut[i*3+2]= outColor.b;
+    }
+}
+
+void Quadratique_dist(OCTET *ImgOut, std::vector<Color> ImgInHSL, int nH, int nW, double hue, double saturation) {
+    //double R, G, B, m;
+    double hue1, hue2, hue3;
+    couleurQuadratique(hue, hue1, hue2, hue3);
+    Color outColor;
+    for (int i = 0; i < nH * nW; i++) {
+        double H = ImgInHSL[i].h;
+        //double S = ImgInHSL[i].s;
+        //double L = ImgInHSL[i].l;
+
+        //double newHue;
+        double dist= min(fabs(H - hue), 1.0 - fabs(H - hue));
+        double distance1 = min(fabs(H - hue1), 1.0 - fabs(H - hue1));
+        double distance2 = min(fabs(H - hue2), 1.0 - fabs(H - hue2));
+        double distance3 = min(fabs(H - hue3), 1.0 - fabs(H - hue3));
+
+        if (dist < distance1 && dist < distance2 && dist < distance3) {
+            //newHue = hue;
+            outColor.h= hue;
+        } else if (distance1 < distance2 && distance2 < distance3) {
+            //newHue = hue1;
+            outColor.h= hue1;
+        } else if (distance2 < distance3) {
+            //newHue = hue2;
+            outColor.h= hue2;
+        } else {
+            //newHue = hue3;
+            outColor.h= hue3;
+        }
+
+        /*pixel_HSL_to_RGB(newHue, S, L, R, G, B, m);
+        ImgOut[i*3] = R + m > 1 ? 255 : (R + m) * 255.0;
+        ImgOut[i*3+1] = G + m > 1 ? 255 : (G + m) * 255.0;
+        ImgOut[i*3+2] = B + m > 1 ? 255 : (B + m) * 255.0;*/
+        outColor.s=(saturation+ImgInHSL[i].s)/2;
+        outColor.l=ImgInHSL[i].l;
+        outColor.HSL_to_RGB();
+
+        ImgOut[i*3]= outColor.r;
+        ImgOut[i*3+1]= outColor.g;
+        ImgOut[i*3+2]= outColor.b;
+    }
+}
 #endif

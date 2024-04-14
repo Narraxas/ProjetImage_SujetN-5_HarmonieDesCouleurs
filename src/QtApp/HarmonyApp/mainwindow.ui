@@ -82,17 +82,12 @@ border-top-color: rgb(182, 182, 182);</string>
     </item>
     <item>
      <property name="text">
-      <string>Complémentaire</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>ComplémentaireB</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
       <string>Analogue</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Complémentaire</string>
      </property>
     </item>
     <item>
@@ -102,12 +97,37 @@ border-top-color: rgb(182, 182, 182);</string>
     </item>
     <item>
      <property name="text">
+      <string>Quadratique</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>ComplémentaireB</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
       <string>TriadiqueB</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>Quadratique</string>
+      <string>Analogue par distance</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Complémentaire par distance</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Triadique par distance</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Quadratique par distance</string>
      </property>
     </item>
    </widget>
