@@ -5,6 +5,7 @@
 #include <QProcess>
 #include <QColorDialog>
 #include <QFile>
+#include <QtConcurrent/QtConcurrent>
 
 #include <iostream>
 #include <vector>
@@ -25,10 +26,12 @@ bool isOpenedClosed = false;
 bool colorChoosed = false;
 unsigned int intensite_flou=1;
 float seuil_distance =0.25;
+QTimer timer;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , futureWatcher(this)
 {
 
     ui->setupUi(this);
@@ -51,6 +54,25 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->seuilDistance, SIGNAL(valueChanged(int)), this, SLOT(updateSeuilDistance(int)));
 
     ui->saveBtn->setVisible(false);
+
+    // Barre de progression
+    ui->progressBarImgOut->setRange(0, 100); // Set the range of the progress bar
+    ui->progressBarImgOut->setValue(0);      // Set initial value
+    ui->progressBarImgOut->setVisible(false);
+
+    timer.setInterval(100); // Set interval to update progress (in milliseconds)
+
+    // Connect the timer's timeout signal to update the progress bar
+    QObject::connect(&timer, &QTimer::timeout, [&]() {
+        int value = ui->progressBarImgOut->value();
+        if (value < 150) {
+            ui->progressBarImgOut->setValue(value + 10); // Increase the value of the progress bar
+        } else {
+            timer.stop(); // Stop the timer when progress reaches 100%
+            ui->progressBarImgOut->setVisible(false);
+            ui->progressBarImgOut->setValue(0);      // Set initial value
+        }
+    });
 }
 
 MainWindow::~MainWindow()
@@ -428,59 +450,62 @@ void MainWindow::on_pushButton_2_clicked()
     if (!originalFrameFilePath.isEmpty()) {
         if (selectedHarmony != "Sélectionnez une harmonie" && !selectedHarmony.isEmpty()) {
             if (colorChoosed) {
-                //harmonie segmentation kmean
-                if (selectedHarmony == "Monochromatique") {
-                    writeMonochromatique(color.hue()/360.0f, color.saturation()/255.0f);
-                }
-                if (selectedHarmony == "Complémentaire") {
-                    writeComplementaire(color.hue()/360.0f, color.saturation()/255.0f);
-                }
-                if (selectedHarmony == "Triadique") {
-                    writeTriadique(color.hue()/360.0f, color.saturation()/255.0f);
-                }
-                if (selectedHarmony == "Quadratique") {
-                    writeQuadratique(color.hue()/360.0f, color.saturation()/255.0f);
-                }
-                if (selectedHarmony == "Analogue") {
-                    writeAnalogue(color.hue()/360.0f, color.saturation()/255.0f);
-                }
-                //////test
-                if (selectedHarmony == "TriadiqueB") {
-                    writeTriadique_B(color.hue()/360.0f, color.saturation()/255.0f);
-                }
-                if (selectedHarmony == "ComplémentaireB") {
-                    writeComplementaire_B(color.hue()/360.0f, color.saturation()/255.0f);
-                }
-                //////harmonie par distance
-                if (selectedHarmony == "Complémentaire par distance") {
-                    writeComplementaire_dist(color.hue()/360.0f, color.saturation()/255.0f);
-                }
-                if (selectedHarmony == "Triadique par distance") {
-                    writeTriadique_dist(color.hue()/360.0f, color.saturation()/255.0f);
-                }
-                if (selectedHarmony == "Quadratique par distance") {
-                    writeQuadratique_dist(color.hue()/360.0f, color.saturation()/255.0f);
-                }
-                if (selectedHarmony == "Analogue par distance") {
-                    writeAnalogue_dist(color.hue()/360.0f, color.saturation()/255.0f);
-                }
+                // On lance la progress bar
+                timer.start();
+                ui->progressBarImgOut->setValue(0);
+                ui->progressBarImgOut->setVisible(true);
+                ui->progressBarImgOut->raise();
+                qApp->processEvents();
 
-                if (ui->modifiedFrame) {
-                    // Charger l'image
-                    QPixmap modifiedImage(modifiedFrameFilePath);
-                    if (!modifiedImage.isNull()) {
-                        // Redimensionner l'image pour s'adapter à la taille de la frame
-                        modifiedImage = modifiedImage.scaled(ui->modifiedFrame->size(), Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
-
-                        // Créer un QLabel et afficher l'modifiedImage dans la frame
-                        QLabel *label = new QLabel(ui->modifiedFrame);
-                        label->setPixmap(modifiedImage);
-                        label->setScaledContents(true); // Redimensionner l'image pour s'adapter à la taille du QLabel
-                        label->show();
+                // Exécute le traitement dans un thread séparé
+                QFuture<void> future = QtConcurrent::run([=]() {
+                    //harmonie segmentation kmean
+                    if (selectedHarmony == "Monochromatique") {
+                        writeMonochromatique(color.hue()/360.0f, color.saturation()/255.0f);
                     }
-                }
+                    if (selectedHarmony == "Complémentaire") {
+                        writeComplementaire(color.hue()/360.0f, color.saturation()/255.0f);
+                    }
+                    if (selectedHarmony == "Triadique") {
+                        writeTriadique(color.hue()/360.0f, color.saturation()/255.0f);
+                    }
+                    if (selectedHarmony == "Quadratique") {
+                        writeQuadratique(color.hue()/360.0f, color.saturation()/255.0f);
+                    }
+                    if (selectedHarmony == "Analogue") {
+                        writeAnalogue(color.hue()/360.0f, color.saturation()/255.0f);
+                    }
+                    //////test
+                    if (selectedHarmony == "TriadiqueB") {
+                        writeTriadique_B(color.hue()/360.0f, color.saturation()/255.0f);
+                    }
+                    if (selectedHarmony == "ComplémentaireB") {
+                        writeComplementaire_B(color.hue()/360.0f, color.saturation()/255.0f);
+                    }
+                    //////harmonie par distance
+                    if (selectedHarmony == "Complémentaire par distance") {
+                        writeComplementaire_dist(color.hue()/360.0f, color.saturation()/255.0f);
+                    }
+                    if (selectedHarmony == "Triadique par distance") {
+                        writeTriadique_dist(color.hue()/360.0f, color.saturation()/255.0f);
+                    }
+                    if (selectedHarmony == "Quadratique par distance") {
+                        writeQuadratique_dist(color.hue()/360.0f, color.saturation()/255.0f);
+                    }
+                    if (selectedHarmony == "Analogue par distance") {
+                        writeAnalogue_dist(color.hue()/360.0f, color.saturation()/255.0f);
+                    }
+                });
 
-                ui->saveBtn->setVisible(true);
+                // Connectez le signal de progression au slot de mise à jour de la barre de progression
+                connect(&futureWatcher, &QFutureWatcher<void>::progressValueChanged, this, &MainWindow::updateProgressBar);
+
+                // Connectez le signal de fin au slot de traitement terminé
+                connect(&futureWatcher, &QFutureWatcher<void>::finished, this, &MainWindow::processingFinished);
+
+                // Démarrez la surveillance de l'avenir
+                futureWatcher.setFuture(future);
+
             } else
                 QMessageBox::critical(this, "Erreur", "You must choose a color first", QMessageBox::Ok);
         } else
@@ -489,6 +514,28 @@ void MainWindow::on_pushButton_2_clicked()
         QMessageBox::critical(this, "Erreur", "You must load a file first.", QMessageBox::Ok);
 }
 
+void MainWindow::updateProgressBar(int value) {
+    ui->progressBarImgOut->setValue(value);
+}
+
+void MainWindow::processingFinished() {
+    // Affichez le résultat du traitement ou effectuez toute autre opération nécessaire
+    // par exemple, afficher l'image modifiée dans un QLabel
+    if (ui->modifiedFrame) {
+        QPixmap modifiedImage(modifiedFrameFilePath);
+        if (!modifiedImage.isNull()) {
+            modifiedImage = modifiedImage.scaled(ui->modifiedFrame->size(), Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+            QLabel *label = new QLabel(ui->modifiedFrame);
+            label->setPixmap(modifiedImage);
+            label->setScaledContents(true);
+            label->show();
+        }
+    }
+
+    ui->saveBtn->setVisible(true);
+    ui->progressBarImgOut->setVisible(false);
+    timer.stop();
+}
 
 void MainWindow::on_isBlurred_stateChanged(int arg1)
 {

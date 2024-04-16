@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QFutureWatcher>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -34,10 +35,13 @@ private slots:
 
     void updateSeuilDistance(int value);
 
+    void updateProgressBar(int value);
+    void processingFinished();
 
     void on_saveBtn_clicked();
 
 private:
     Ui::MainWindow *ui;
+    QFutureWatcher<void> futureWatcher;
 };
 #endif // MAINWINDOW_H
