@@ -27,6 +27,8 @@ bool colorChoosed = false;
 unsigned int intensite_flou=1;
 float seuil_distance =0.25;
 QTimer timer;
+QLabel *labelIn;
+QLabel *labelOut;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -86,17 +88,46 @@ void MainWindow::on_pushButton_clicked()
     // QMessageBox::information(this, "FilePath of the image", filePath);
 
     if (ui->originalFrame) {
+        // Récupérer le layout actuel
+        QLayout *existingLayout = ui->originalFrame->layout();
+
+        // Si un layout existe déjà, le supprimer et supprimer les widgets enfants
+        if (existingLayout) {
+            QLayoutItem *child;
+            while ((child = existingLayout->takeAt(0)) != nullptr) {
+                if (QWidget *widget = child->widget()) {
+                    widget->deleteLater();
+                }
+                delete child;
+            }
+            delete existingLayout;
+        }
+
         // Charger l'image
         QPixmap originalImage(originalFrameFilePath);
         if (!originalImage.isNull()) {
+            delete labelIn;
             // Redimensionner l'image pour s'adapter à la taille de la frame
-            originalImage = originalImage.scaled(ui->originalFrame->size(), Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+            originalImage = originalImage.scaled(ui->originalFrame->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
             // Créer un QLabel et afficher l'originalImage dans la frame
-            QLabel *label = new QLabel(ui->originalFrame);
-            label->setPixmap(originalImage);
-            label->setScaledContents(true); // Redimensionner l'image pour s'adapter à la taille du QLabel
-            label->show();
+            labelIn = new QLabel(ui->originalFrame);
+            labelIn->setPixmap(originalImage);
+            labelIn->setScaledContents(true); // Redimensionner l'image pour s'adapter à la taille du QLabel
+            labelIn->show();
+
+            // Créer un layout pour la frame et ajouter le label
+            existingLayout = new QVBoxLayout(ui->originalFrame);
+            existingLayout->addWidget(labelIn);
+
+            // Centrer le label dans la frame
+            existingLayout->setAlignment(Qt::AlignCenter);
+            // Ajuster la marge et l'espacement pour centrer le label
+            existingLayout->setContentsMargins(0, 0, 0, 0);
+            existingLayout->setSpacing(0);
+
+            // Appliquer le layout à la frame
+            ui->originalFrame->setLayout(existingLayout);
         }
     }
 }
@@ -522,13 +553,42 @@ void MainWindow::processingFinished() {
     // Affichez le résultat du traitement ou effectuez toute autre opération nécessaire
     // par exemple, afficher l'image modifiée dans un QLabel
     if (ui->modifiedFrame) {
+        // Récupérer le layout actuel
+        QLayout *existingLayout = ui->modifiedFrame->layout();
+
+        // Si un layout existe déjà, le supprimer et supprimer les widgets enfants
+        if (existingLayout) {
+            QLayoutItem *child;
+            while ((child = existingLayout->takeAt(0)) != nullptr) {
+                if (QWidget *widget = child->widget()) {
+                    widget->deleteLater();
+                }
+                delete child;
+            }
+            delete existingLayout;
+        }
+
+        delete labelOut;
         QPixmap modifiedImage(modifiedFrameFilePath);
         if (!modifiedImage.isNull()) {
-            modifiedImage = modifiedImage.scaled(ui->modifiedFrame->size(), Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
-            QLabel *label = new QLabel(ui->modifiedFrame);
-            label->setPixmap(modifiedImage);
-            label->setScaledContents(true);
-            label->show();
+            modifiedImage = modifiedImage.scaled(ui->modifiedFrame->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            labelOut = new QLabel(ui->modifiedFrame);
+            labelOut->setPixmap(modifiedImage);
+            labelOut->setScaledContents(true);
+            labelOut->show();
+
+            // Créer un layout pour la frame et ajouter le label
+            existingLayout = new QVBoxLayout(ui->modifiedFrame);
+            existingLayout->addWidget(labelOut);
+
+            // Centrer le label dans la frame
+            existingLayout->setAlignment(Qt::AlignCenter);
+            // Ajuster la marge et l'espacement pour centrer le label
+            existingLayout->setContentsMargins(0, 0, 0, 0);
+            existingLayout->setSpacing(0);
+
+            // Appliquer le layout à la frame
+            ui->modifiedFrame->setLayout(existingLayout);
         }
     }
 
@@ -567,6 +627,21 @@ void MainWindow::updateSeuilDistance(int value) {
     }
 
     if (ui->modifiedFrame) {
+        // Récupérer le layout actuel
+        QLayout *existingLayout = ui->originalFrame->layout();
+
+        // Si un layout existe déjà, le supprimer et supprimer les widgets enfants
+        if (existingLayout) {
+            QLayoutItem *child;
+            while ((child = existingLayout->takeAt(0)) != nullptr) {
+                if (QWidget *widget = child->widget()) {
+                    widget->deleteLater();
+                }
+                delete child;
+            }
+            delete existingLayout;
+        }
+
         // Charger l'image
         QPixmap modifiedImage(modifiedFrameFilePath);
         if (!modifiedImage.isNull()) {
