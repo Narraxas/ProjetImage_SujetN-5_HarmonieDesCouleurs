@@ -626,9 +626,12 @@ void MainWindow::updateSeuilDistance(int value) {
         writeTriadique_B(color.hue()/360.0f, color.saturation()/255.0f);
     }
 
+
+    // Affichez le résultat du traitement ou effectuez toute autre opération nécessaire
+    // par exemple, afficher l'image modifiée dans un QLabel
     if (ui->modifiedFrame) {
         // Récupérer le layout actuel
-        QLayout *existingLayout = ui->originalFrame->layout();
+        QLayout *existingLayout = ui->modifiedFrame->layout();
 
         // Si un layout existe déjà, le supprimer et supprimer les widgets enfants
         if (existingLayout) {
@@ -642,19 +645,30 @@ void MainWindow::updateSeuilDistance(int value) {
             delete existingLayout;
         }
 
-        // Charger l'image
+        delete labelOut;
         QPixmap modifiedImage(modifiedFrameFilePath);
         if (!modifiedImage.isNull()) {
-            // Redimensionner l'image pour s'adapter à la taille de la frame
-            modifiedImage = modifiedImage.scaled(ui->modifiedFrame->size(), Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+            modifiedImage = modifiedImage.scaled(ui->modifiedFrame->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            labelOut = new QLabel(ui->modifiedFrame);
+            labelOut->setPixmap(modifiedImage);
+            labelOut->setScaledContents(true);
+            labelOut->show();
 
-            // Créer un QLabel et afficher l'modifiedImage dans la frame
-            QLabel *label = new QLabel(ui->modifiedFrame);
-            label->setPixmap(modifiedImage);
-            label->setScaledContents(true); // Redimensionner l'image pour s'adapter à la taille du QLabel
-            label->show();
+            // Créer un layout pour la frame et ajouter le label
+            existingLayout = new QVBoxLayout(ui->modifiedFrame);
+            existingLayout->addWidget(labelOut);
+
+            // Centrer le label dans la frame
+            existingLayout->setAlignment(Qt::AlignCenter);
+            // Ajuster la marge et l'espacement pour centrer le label
+            existingLayout->setContentsMargins(0, 0, 0, 0);
+            existingLayout->setSpacing(0);
+
+            // Appliquer le layout à la frame
+            ui->modifiedFrame->setLayout(existingLayout);
         }
     }
+
 
 }
 
