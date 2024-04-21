@@ -1,7 +1,7 @@
 
 #include <iostream>
 #include <ostream>
-#include "getDominantColors.hpp"
+#include "getDominantColor.hpp"
 
 int main(int argc, char* argv[]) {
     char cNomImgLue[250], cNomImgEcrite[250];
@@ -23,6 +23,7 @@ int main(int argc, char* argv[]) {
     nTaille = nH * nW;
     int nTaille3 = nTaille * 3;
     allocation_tableau(ImgIn, OCTET, nTaille3);
+    allocation_tableau(ImgOut, OCTET, nTaille3);
     allocation_tableau(Palette, OCTET, (taille_palette * taille_palette) * 3);
     lire_image_ppm(cNomImgLue, ImgIn, nH * nW);
 
@@ -32,7 +33,7 @@ int main(int argc, char* argv[]) {
         listeColors.push_back(c);
     }
 
-    vector<Color> dominantColors = get_dominant_colors(listeColors, number_of_dominant_color, nH, nW);
+    vector<Color> dominantColors = get_dominant_colors(ImgOut, listeColors, number_of_dominant_color, nH, nW);
 
     createPaletteImage(Palette, dominantColors, nTaille3, nW, nH);
     ecrire_image_ppm((char *)"out/Palette.ppm", Palette, nH, nW);

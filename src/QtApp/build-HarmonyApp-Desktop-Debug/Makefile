@@ -37,7 +37,7 @@ MOVE          = mv -f
 TAR           = tar -cf
 COMPRESS      = gzip -9f
 DISTNAME      = HarmonyApp1.0.0
-DISTDIR = /home/e20210001937/Documents/Master1/M1/S2/ProjetImage_SujetN-5_HarmonieDesCouleurs/src/QtApp/build-HarmonyApp-Desktop-Debug/.tmp/HarmonyApp1.0.0
+DISTDIR = /home/deroubaix/Bureau/MASTER/Master_1/Semestre_2/ProjetImage_SujetN-5_HarmonieDesCouleurs/src/QtApp/build-HarmonyApp-Desktop-Debug/.tmp/HarmonyApp1.0.0
 LINK          = g++
 LFLAGS        = 
 LIBS          = $(SUBLIBS) /usr/lib/x86_64-linux-gnu/libQt5Widgets.so /usr/lib/x86_64-linux-gnu/libQt5Gui.so /usr/lib/x86_64-linux-gnu/libQt5Core.so -lGL -lpthread   
@@ -59,7 +59,8 @@ OBJECTS       = main.o \
 		mainwindow.o \
 		qrc_qmake_qmake_qm_files.o \
 		moc_mainwindow.o
-DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
+DIST          = ../HarmonyApp/HarmonyApp.pro.user \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/linux.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/sanitize.conf \
@@ -102,6 +103,7 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_service_support_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_sql.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_sql_private.pri \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_svg.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_testlib.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_testlib_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_theme_support_private.pri \
@@ -116,6 +118,7 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt_config.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_post.prf \
+		../HarmonyApp/.qmake.stash \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/toolchain.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf \
@@ -137,7 +140,8 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exceptions.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
-		../HarmonyApp/HarmonyApp.pro ../HarmonyApp/mainwindow.h ../HarmonyApp/main.cpp \
+		../HarmonyApp/HarmonyApp.pro ../HarmonyApp/harmonie.hpp \
+		../HarmonyApp/mainwindow.h ../HarmonyApp/main.cpp \
 		../HarmonyApp/mainwindow.cpp
 QMAKE_TARGET  = HarmonyApp
 DESTDIR       = 
@@ -193,6 +197,7 @@ Makefile: ../HarmonyApp/HarmonyApp.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/lin
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_service_support_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_sql.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_sql_private.pri \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_svg.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_testlib.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_testlib_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_theme_support_private.pri \
@@ -207,6 +212,7 @@ Makefile: ../HarmonyApp/HarmonyApp.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/lin
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt_config.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/toolchain.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf \
@@ -274,6 +280,7 @@ Makefile: ../HarmonyApp/HarmonyApp.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/lin
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_service_support_private.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_sql.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_sql_private.pri:
+/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_svg.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_testlib.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_testlib_private.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_theme_support_private.pri:
@@ -288,6 +295,7 @@ Makefile: ../HarmonyApp/HarmonyApp.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/lin
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt_config.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_post.prf:
+.qmake.stash:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/toolchain.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf:
@@ -325,13 +333,11 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents ../HarmonyApp/HarmonyApp_fr_FR.ts $(DISTDIR)/
 	$(COPY_FILE) --parents qmake_qmake_qm_files.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../HarmonyApp/mainwindow.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../HarmonyApp/harmonie.hpp ../HarmonyApp/mainwindow.h $(DISTDIR)/
 	$(COPY_FILE) --parents ../HarmonyApp/main.cpp ../HarmonyApp/mainwindow.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../HarmonyApp/mainwindow.ui $(DISTDIR)/
-	$(COPY_FILE) --parents ../HarmonyApp/HarmonyApp_fr_FR.ts $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -355,18 +361,13 @@ check: first
 
 benchmark: first
 
-compiler_lrelease_make_all: .qm/HarmonyApp_fr_FR.qm
+compiler_lrelease_make_all:
 compiler_lrelease_clean:
-	-$(DEL_FILE) .qm/HarmonyApp_fr_FR.qm
-.qm/HarmonyApp_fr_FR.qm: ../HarmonyApp/HarmonyApp_fr_FR.ts
-	/usr/lib/qt5/bin/lrelease ../HarmonyApp/HarmonyApp_fr_FR.ts -qm .qm/HarmonyApp_fr_FR.qm
-
 compiler_rcc_make_all: qrc_qmake_qmake_qm_files.cpp
 compiler_rcc_clean:
 	-$(DEL_FILE) qrc_qmake_qmake_qm_files.cpp
 qrc_qmake_qmake_qm_files.cpp: qmake_qmake_qm_files.qrc \
-		/usr/lib/qt5/bin/rcc \
-		.qm/HarmonyApp_fr_FR.qm
+		/usr/lib/qt5/bin/rcc
 	/usr/lib/qt5/bin/rcc -name qmake_qmake_qm_files qmake_qmake_qm_files.qrc -o qrc_qmake_qmake_qm_files.cpp
 
 compiler_moc_predefs_make_all: moc_predefs.h
@@ -381,7 +382,7 @@ compiler_moc_header_clean:
 moc_mainwindow.cpp: ../HarmonyApp/mainwindow.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/e20210001937/Documents/Master1/M1/S2/ProjetImage_SujetN-5_HarmonieDesCouleurs/src/QtApp/build-HarmonyApp-Desktop-Debug/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/e20210001937/Documents/Master1/M1/S2/ProjetImage_SujetN-5_HarmonieDesCouleurs/src/QtApp/HarmonyApp -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/11 -I/usr/include/x86_64-linux-gnu/c++/11 -I/usr/include/c++/11/backward -I/usr/lib/gcc/x86_64-linux-gnu/11/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../HarmonyApp/mainwindow.h -o moc_mainwindow.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/deroubaix/Bureau/MASTER/Master_1/Semestre_2/ProjetImage_SujetN-5_HarmonieDesCouleurs/src/QtApp/build-HarmonyApp-Desktop-Debug/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/deroubaix/Bureau/MASTER/Master_1/Semestre_2/ProjetImage_SujetN-5_HarmonieDesCouleurs/src/QtApp/HarmonyApp -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/11 -I/usr/include/x86_64-linux-gnu/c++/11 -I/usr/include/c++/11/backward -I/usr/lib/gcc/x86_64-linux-gnu/11/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../HarmonyApp/mainwindow.h -o moc_mainwindow.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -400,7 +401,7 @@ compiler_yacc_impl_make_all:
 compiler_yacc_impl_clean:
 compiler_lex_make_all:
 compiler_lex_clean:
-compiler_clean: compiler_lrelease_clean compiler_rcc_clean compiler_moc_predefs_clean compiler_moc_header_clean compiler_uic_clean 
+compiler_clean: compiler_rcc_clean compiler_moc_predefs_clean compiler_moc_header_clean compiler_uic_clean 
 
 ####### Compile
 
@@ -408,7 +409,12 @@ main.o: ../HarmonyApp/main.cpp ../HarmonyApp/mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../HarmonyApp/main.cpp
 
 mainwindow.o: ../HarmonyApp/mainwindow.cpp ../HarmonyApp/mainwindow.h \
-		ui_mainwindow.h
+		ui_mainwindow.h \
+		../HarmonyApp/image_ppm.h \
+		../HarmonyApp/Color.hpp \
+		../HarmonyApp/harmonie.hpp \
+		../HarmonyApp/getDominantColor.hpp \
+		../HarmonyApp/k_mean.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../HarmonyApp/mainwindow.cpp
 
 qrc_qmake_qmake_qm_files.o: qrc_qmake_qmake_qm_files.cpp 

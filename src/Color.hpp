@@ -54,15 +54,15 @@ class Color{
             if(maxVal == minVal){
                 this->s = 0;
                 this->h = 0;
-            } 
+            }
             else {
                 this->s = (this->l<0.5) ? ((maxVal-minVal)/(maxVal+minVal)):((maxVal-minVal)/(2.0-maxVal-minVal));
                 if(maxVal == R){
                     this->h=(G-B)/(maxVal-minVal)+((G<B)?6.0:0.0);
-                } 
+                }
                 else if(maxVal == G){
                     this->h = 2.0 + (B-R) / (maxVal - minVal);
-                } 
+                }
                 else{
                     this->h = 4.0 + (R-G) / (maxVal - minVal);
                 }
@@ -125,7 +125,7 @@ class Color{
             return *this;
         }
 
-        bool operator == (Color &c)
+        bool operator == (const Color &c)
         {
             if( r == c.r &&
                 g == c.g &&
@@ -158,9 +158,9 @@ public:
     }
 
     Color_float(){
-        r = 0;
-        g = 0;
-        b = 0;
+        r = 0.f;
+        g = 0.f;
+        b = 0.f;
     }
 
     Color_float& operator = (Color_float &c){
